@@ -15,7 +15,7 @@ deploy () {
                 -e NEO4J_PORT=6362 \
                 -e MONGODB=104.199.173.158 \
                 -e M_PORT=27017 \
-                -E M_DATABASE=beee-dev \
+                -e M_DATABASE=beee-dev \
                 -v $HOME/bkp/mongodb:/mongodb \
                 -v $HOME/bkp/neo4j:/neo4j \
                 bkp_cron
