@@ -18,7 +18,7 @@ deploy () {
                 -e M_DATABASE=beee-dev \
                 -v $HOME/bkp/mongodb:/mongodb \
                 -v $HOME/bkp/neo4j:/neo4j/backup \
-                -v $HOME/neo4j/bin:neo4j/bin \
+                -v $HOME/neo4j/bin:/neo4j/bin \
                 bkp_cron
 }
 
