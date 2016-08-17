@@ -29,11 +29,10 @@ neo4j_backup () {
     DATE=`date +%Y-%m-%d:%H:%M:%S`
     # ./neo4j/bin/neo4j-backup -host $NEO4J -port $NEO4J_PORT -to /neo4j/backup/neo4j_$DATE
     docker run --rm \
-                -it \
-                -v /home/docker-user/neo4j:/data neo4j:3.0.4-enterprise bin/neo4j-backup \
+                -v /neo4j/backup:/data neo4j:3.0.4-enterprise bin/neo4j-backup \
                 -host 107.167.181.111 \
                 -port 6362 \
-                -to /data_$DATE
+                -to /data/bkp_$DATE
 }
 
 $*
