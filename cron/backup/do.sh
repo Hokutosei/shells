@@ -19,6 +19,7 @@ deploy () {
                 -v $HOME/bkp/mongodb:/mongodb \
                 -v $HOME/bkp/neo4j:/neo4j/backup \
                 -v $HOME/neo4j/bin:/neo4j/bin \
+                -v /var/run/docker.sock:/var/run/docker.sock \
                 bkp_cron
 }
 
