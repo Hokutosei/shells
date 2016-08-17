@@ -33,7 +33,7 @@ neo4j_backup () {
                 -v /home/docker-user/neo4j:/data neo4j:3.0.4-enterprise bin/neo4j-backup \
                 -host 107.167.181.111 \
                 -port 6362 \
-                -to /data_$(DATE=`date +%Y-%m-%d:%H:%M:%S`)
+                -to /data_$DATE
 }
 
 $*
