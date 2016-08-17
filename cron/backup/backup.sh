@@ -13,10 +13,11 @@ M_DATABASE=${MONGODB_DATABASE:-beee-dev}
 
 # mongodump -h 104.199.173.158:27017 -d beee-dev --out bkp.json -j 15 --excludeCollection temporary_collections --excludeCollection temporary_datastore_rows --gzip
 # HOST=104.199.136.27:27018 DATABASE=beee-dev ./backup.sh dump
-mongodb-backup () {
+mongodb_backup () {
     DATE=`date +%Y-%m-%d:%H:%M:%S`
-    mongodump -h $MONGODB:$M_PORT \
-                -d $MONGODB_DATABASE \
+    mongodump --host $MONGODB \
+                --port $M_PORT \
+                -d $M_DATABASE \
                 -j $CONCURRENT \
                 --out /mongodb/bkp_$DATE.json \
                 --excludeCollection temporary_collections \
@@ -24,7 +25,7 @@ mongodb-backup () {
                 --gzip
 }
 
-neo4j-backup () {
+neo4j_backup () {
     DATE=`date +%Y-%m-%d:%H:%M:%S`
     ./bin/neo4j-backup -host $NEO4J -port $NEO4J_PORT -to /neo4j/neo4j_$DATE
 }
