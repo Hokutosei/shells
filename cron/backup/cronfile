@@ -1,1 +1,2 @@
-0 * * * * /backup.sh
+0 * * * * MONGODB=$MONGODB_HOST M_PORT=$M_PORT  M_DATABASE=$M_DATABASE /backup.sh mongodb-backup
+0 * * * * NEO4J=$NEO4J NEO4J_PORT=$NEO4J_PORT /backup.sh neo4j-backup

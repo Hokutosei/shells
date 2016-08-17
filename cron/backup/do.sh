@@ -9,6 +9,18 @@ run () {
                 bkp_cron
 }
 
+deploy () {
+    docker run -d \
+                -e NEO4J=107.167.181.111 \
+                -e NEO4J_PORT=6362 \
+                -e MONGODB=104.199.173.158 \
+                -e M_PORT=27017 \
+                -E M_DATABASE=beee-dev \
+                -v $HOME/bkp/mongodb:/mongodb \
+                -v $HOME/bkp/neo4j:/neo4j \
+                bkp_cron
+}
+
 build () {
     make
 }
