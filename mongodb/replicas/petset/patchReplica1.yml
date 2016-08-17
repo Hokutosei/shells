@@ -1,0 +1,34 @@
+apiVersion: apps/v1alpha1
+kind: PetSet
+metadata:
+  name: a-mongo
+spec:
+  serviceName: "a-mongo"
+  template:
+    metadata:
+      labels:
+        name: a-mongo
+        tier: database
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mongo
+        image: mongo:3.3.10
+        command:
+          - mongod
+          - "--replSet"
+          - rs0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 27017
+          hostPort: 27018
+          name: mongo
+        resources:
+          requests:
+            cpu: "0.1m"
+            memory: "64Mi"
+          limits:
+            cpu: "1"
+            memory: "350Mi"
