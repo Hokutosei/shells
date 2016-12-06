@@ -1,0 +1,9 @@
+[mariadb]
+innodb-encrypt-tables
+innodb-encrypt-log
+innodb-encryption-threads = 4
+plugin-load-add=file_key_management
+file_key_management_filename=/keys/keys.txt
+file_key_management_encryption_algorithm=AES_OFB
+# for monitoring
+innodb-tablespaces-encryption

@@ -1,0 +1,117 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pd-10g
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "pd-ssd"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+
+
+Name:		a-redis-3982387890-dnerf
+Namespace:	default
+Node:		/
+Labels:		name=a-redis
+		pod-template-hash=3982387890
+		tier=database
+Status:		Pending
+IP:
+Controllers:	ReplicaSet/a-redis-3982387890
+Containers:
+  redis:
+    Image:	gcr.io/b-eee-technology/redis:3.2.3-alpine
+    Port:	6379/TCP
+    Command:
+      redis-server
+      /usr/local/etc/redis/redis.conf
+    Limits:
+      cpu:	1
+      memory:	800Mi
+    Requests:
+      cpu:	1m
+      memory:	16Mi
+    Volume Mounts:
+      /data/db from a-redis (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-uveb0 (ro)
+    Environment Variables:	<none>
+Conditions:
+  Type		Status
+  PodScheduled 	False
+Volumes:
+  a-redis:
+    Type:	PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:	a-redis-data
+    ReadOnly:	false
+  default-token-uveb0:
+    Type:	Secret (a volume populated by a Secret)
+    SecretName:	default-token-uveb0
+QoS Class:	Burstable
+Tolerations:	<none>
+Events:
+  FirstSeen	LastSeen	Count	From			SubobjectPath	Type		Reason			Message
+  ---------	--------	-----	----			-------------	--------	------			-------
+  1m		1m		4	{default-scheduler }			Warning		FailedScheduling	[SchedulerPredicates failed due to PersistentVolumeClaim is not bound: "a-redis-data", which is unexpected., SchedulerPredicates failed due to PersistentVolumeClaim is not bound: "a-redis-data", which is unexpected.]
+  1m		1m		2	{default-scheduler }			Warning		FailedScheduling	pod (a-redis-3982387890-dnerf) failed to fit in any node
+fit failure on node (gke-hinode-cluster-default-pool-ef69c8f9-684o): NoVolumeZoneConflict
+fit failure on node (gke-hinode-cluster-default-pool-ef69c8f9-r0mi): NoVolumeZoneConflict
+
+
+➜  auditCore git:(develop) ✗ kubectl describe pod a-redis-3982387890-li4ye
+Name:		a-redis-3982387890-li4ye
+Namespace:	default
+Node:		gke-hinode-cluster-default-pool-ef69c8f9-684o/10.240.0.15
+Start Time:	Tue, 01 Nov 2016 19:42:37 +0900
+Labels:		name=a-redis
+		pod-template-hash=3982387890
+		tier=database
+Status:		Pending
+IP:
+Controllers:	ReplicaSet/a-redis-3982387890
+Containers:
+  redis:
+    Container ID:
+    Image:		gcr.io/b-eee-technology/redis:3.2.3-alpine
+    Image ID:
+    Port:		6379/TCP
+    Command:
+      redis-server
+      /usr/local/etc/redis/redis.conf
+    Limits:
+      cpu:	1
+      memory:	800Mi
+    Requests:
+      cpu:		1m
+      memory:		16Mi
+    State:		Waiting
+      Reason:		ContainerCreating
+    Ready:		False
+    Restart Count:	0
+    Volume Mounts:
+      /data/db from a-redis (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-uveb0 (ro)
+    Environment Variables:	<none>
+Conditions:
+  Type		Status
+  Initialized 	True
+  Ready 	False
+  PodScheduled 	True
+Volumes:
+  a-redis:
+    Type:	PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:	a-redis-data
+    ReadOnly:	false
+  default-token-uveb0:
+    Type:	Secret (a volume populated by a Secret)
+    SecretName:	default-token-uveb0
+QoS Class:	Burstable
+Tolerations:	<none>
+Events:
+  FirstSeen	LastSeen	Count	From			SubobjectPath	Type		Reason		Message
+  ---------	--------	-----	----			-------------	--------	------		-------
+  2m		2m		1	{default-scheduler }			Normal		Scheduled	Successfully assigned a-redis-3982387890-li4ye to gke-hinode-cluster-default-pool-ef69c8f9-684o
+  2m		1m		7	{controller-manager }			Warning		FailedMount	Failed to attach volume "pvc-22c18508-a00f-11e6-a57e-42010af000a4" on node "gke-hinode-cluster-default-pool-ef69c8f9-684o" with: googleapi: Error 400: The disk resource 'gke-hinode-cluster-1e1-pvc-22c18508-a00f-11e6-a57e-42010af000a4' is already being used by 'gke-hinode-cluster-default-pool-ef69c8f9-6fq6'

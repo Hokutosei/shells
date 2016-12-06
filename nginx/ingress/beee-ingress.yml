@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: beee-ingress
+spec:
+  rules:
+  - host: beee-corphp
+    http:
+      paths:
+      - backend:
+          serviceName: beee-corphp
+          servicePort: 10001
+        path: /corphp
+#   - host: bar.baz.com
+#     http:
+#       paths:
+#       - path: /bar
+#         backend:
+#           serviceName: barSvc
+#           servicePort: 80

@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: a-mysql-0
+  labels:
+    name: a-mysql-0
+    tier: database
+    type: mysql
+spec:
+  ports:
+  - port: 3306
+    name: a-mysql-0
+  clusterIP: None
+#   type: NodePort
+  selector:
+    tier: database
+    name: a-mysql-0
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+  name: a-mysql-0-pd-ssd
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+  zone: asia-northeast1-b
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: a-mysql-0
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "a-mysql-0-pd-ssd"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: a-mysql-0
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        pod.beta.kubernetes.io/hostname: a-mysql-0
+      labels:
+        name: a-mysql-0
+        tier: database
+    spec:
+      volumes:
+        - name: a-mysql-0
+          persistentVolumeClaim:
+            claimName: a-mysql-0
+      containers:
+      - name: mysql
+        image: mysql:5.7.16
+        args:
+          - "--ignore-db-dir=lost+found"
+        env:
+            - name: MYSQL_ROOT_PASSWORD
+              # openssl rand -base64 32
+              # WbC87sE0wJopjU0eqqaetTA/GFCaodWBoM6/0h23QE8=
+              value: WbC87sE0wJopjU0eqqaetTA/GFCaodWBoM6/0h23QE8=
+            - name: MYSQL_DATABASE
+              value: b-eee-dev
+            - name: MYSQL_USER
+              value: devops
+            - name: MYSQL_PASSWORD
+              value: tHiDF3fEVU1wFnNun09i7N9usuFee8l5V6SZymFEEfI=
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3306
+          hostPort: 3306
+          name: mysql
+        resources:
+          requests:
+            cpu: "0.1m"
+            memory: "64Mi"
+          limits:
+            cpu: "1"
+            memory: "350Mi"
+        volumeMounts:
+        -  mountPath: /var/lib/mysql
+           name: a-mysql-0

@@ -3,36 +3,49 @@ kind: Service
 metadata:
   annotations:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
-  name: a-mongo
+  name: a-mongo-1
   labels:
-    name: a-mongo
+    name: a-mongo-1
     tier: database
     type: mongo
 spec:
   ports:
   - port: 27018
     name: mongo
-  type: NodePort
+  # type: NodePort
+  clusterIP: None
   selector:
     tier: database
     name: a-mongo
 ---
-apiVersion: apps/v1alpha1
-kind: PetSet
+kind: PersistentVolumeClaim
+apiVersion: v1
 metadata:
-  name: a-mongo
+  name: a-mongo-1
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "pd-ssd"
 spec:
-  serviceName: "a-mongo"
-  replicas: 3
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: a-mongo-1
+spec:
+  replicas: 1
   template:
     metadata:
       labels:
-        name: a-mongo
-        tier: database
-      annotations:
-        pod.alpha.kubernetes.io/initialized: "true"
+        app: a-mongo-1
     spec:
-      terminationGracePeriodSeconds: 10
+      volumes:
+        - name: a-mongo-1
+          persistentVolumeClaim:
+            claimName: a-mongo-1
       containers:
       - name: mongo
         image: mongo:3.3.10
@@ -53,15 +66,5 @@ spec:
             cpu: "1"
             memory: "350Mi"
         volumeMounts:
-        - name: data
-          mountPath: /data/db
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-      annotations:
-        volume.alpha.kubernetes.io/storage-class: fo
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 10Gi
+        -  mountPath: /data/db
+           name: a-mongo-1

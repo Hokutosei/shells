@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: a-mariadb-svc0
+  labels:
+    name: a-mariadb-0
+    tier: database
+spec:
+  ports:
+  - port: 3306
+    name: a-mariadb-0
+#   clusterIP: None
+  selector:
+    # tier: database
+    name: a-mariadb-0
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+  name: a-mariadb-0-pd-ssd
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+  zone: asia-northeast1-b
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: a-mariadb-0
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "a-mariadb-0-pd-ssd"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: a-mariadb-0
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        pod.beta.kubernetes.io/hostname: a-mariadb-0
+      labels:
+        name: a-mariadb-0
+        tier: database
+    spec:
+      volumes:
+        - name: a-mariadb-0
+          persistentVolumeClaim:
+            claimName: a-mariadb-0
+      containers:
+      - name: mariadb
+        image: mariadb:10.1
+        # command:
+        # - mysqld
+        # - "--skip-name-resolve=false"
+        env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: OssuB-eee14
+            - name: MYSQL_DATABASE
+              value: hinode
+            - name: MYSQL_USER
+              value: devops
+            - name: MYSQL_PASSWORD
+              value: OssuB-eee14
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3306
+          hostPort: 3306
+          name: mariadb
+        resources:
+          requests:
+            cpu: "0.1m"
+            memory: "64Mi"
+        volumeMounts:
+        -  mountPath: /var/lib/mysql
+           name: a-mariadb-0

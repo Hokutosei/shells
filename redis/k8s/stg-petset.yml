@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: a-redis
+  labels:
+    name: a-redis
+    tier: database
+    type: redis
+spec:
+  ports:
+  - port: 6379
+    name: redis
+  # type: NodePort
+  clusterIP: None
+  selector:
+    tier: database
+    name: a-redis
+---
+apiVersion: apps/v1alpha1
+kind: PetSet
+metadata:
+  name: a-redis
+spec:
+  serviceName: "a-redis"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: a-redis
+        tier: database
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: redis
+        image: gcr.io/b-eee-technology/redis:3.2.3-alpine
+        command:
+          - redis-server
+          - /usr/local/etc/redis/redis.conf
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6379
+          hostPort: 6379
+          name: redis
+        resources:
+          requests:
+            cpu: "0.1m"
+            memory: "16Mi"
+          limits:
+            cpu: "1"
+            memory: "800Mi"
+        volumeMounts:
+        - name: data
+          mountPath: /data/db
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: fo
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 15Gi

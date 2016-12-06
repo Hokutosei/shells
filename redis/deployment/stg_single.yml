@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: a-redis
+  labels:
+    name: a-redis
+    tier: database
+    type: redis
+spec:
+  ports:
+  - port: 6379
+    name: redis
+  # type: NodePort
+  clusterIP: None
+  selector:
+    tier: database
+    name: a-redis
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+  name: redis-pd-ssd
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+  zone: asia-northeast1-b
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: a-redis-data
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "redis-pd-ssd"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: a-redis
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: a-redis
+        tier: database
+    spec:
+      volumes:
+        - name: a-redis
+          persistentVolumeClaim:
+            claimName: a-redis-data
+      containers:
+      - name: redis
+        image: gcr.io/b-eee-technology/redis:3.2.3-alpine
+        command:
+          - redis-server
+          - /usr/local/etc/redis/redis.conf
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6379
+          hostPort: 6379
+          name: redis
+        resources:
+          requests:
+            cpu: "0.1m"
+            memory: "16Mi"
+          limits:
+            cpu: "4"
+            memory: "1000Mi"
+        volumeMounts:
+        - name: a-redis
+          mountPath: /data/db

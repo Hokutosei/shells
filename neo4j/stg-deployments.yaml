@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: a-neo4j
+  labels:
+    name: a-neo4j
+    tier: database
+    type: neo4j
+spec:
+  ports:
+  - port: 6001
+    name: instance
+  - port: 5001
+    name: coordination
+  - port: 7474
+    name: api
+  - port: 7687
+    name: web
+  # type: NodePort
+  clusterIP: None
+  selector:
+    tier: database
+    name: a-neo4j
+---
+apiVersion: apps/v1alpha1
+kind: PetSet
+metadata:
+  name: a-neo4j
+spec:
+  serviceName: "a-neo4j"
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: a-neo4j
+        tier: database
+      annotations:
+        pod.alpha.kubernetes.io/initialized: "true"
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: neo4j
+        image: neo4j:3.0.2-enterprise
+        env:
+          - name: NEO4J_dbms_mode
+            value: HA
+          - name: NEO4J_ha_serverId
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: NEO4J_ha_host_coordination
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: NEO4J_ha_host_data
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: NEO4J_ha_initialHosts
+            value: "a-neo4j-0.a-neo4j:5001,a-neo4j-1.a-neo4j:5001"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6001
+          hostPort: 6001
+          name: instance
+        - containerPort: 5001
+          hostPort: 5001
+          name: coordination
+        - containerPort: 7474
+          hostPort: 7474
+          name: api
+        - containerPort: 7687
+          hostPort: 7687
+          name: web
+        resources:
+          requests:
+            cpu: "0.1m"
+            memory: "1Mi"
+          limits:
+            cpu: "1"
+            memory: "1000Mi"
+        volumeMounts:
+        - name: data
+          mountPath: /data/db
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: fo
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 2Gi

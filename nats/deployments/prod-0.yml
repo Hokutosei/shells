@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: a-nats-0
+  labels:
+    name: a-nats-0
+    tier: nats
+    type: nats
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 4222
+    targetPort: 4222
+    name: nats4
+  - port: 6222
+    targetPort: 6222
+    name: nats6
+  - port: 8222
+    targetPort: 8222
+    name: nats8
+#   clusterIP: None
+#   type: NodePort
+  selector:
+    # tier: database
+    name: a-nats-0
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: a-nats-0
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        pod.beta.kubernetes.io/hostname: a-nats-0
+      labels:
+        name: a-nats-0
+        tier: nats
+    spec:
+      containers:
+      - name: nats
+        image: nats:0.9.4
+        args:
+        - "--user=devops"
+        - "--pass=OssuB-eee14"
+        # env:
+        #     - name: nats_PASSWORD
+        #       value: tHiDF3fEVU1wFnNun09i7N9usuFee8l5V6SZymFEEfI=
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 4222
+          hostPort: 4222
+        - containerPort: 6222
+          hostPort: 6222
+        - containerPort: 8222
+          hostPort: 8222
+        resources:
+          requests:
+            cpu: "0.1m"
+            memory: "64Mi"
+          limits:
+            cpu: "1"
+            memory: "350Mi"
