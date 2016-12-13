@@ -19,16 +19,16 @@ teardown () {
     #     roles: [ { role: "root", db: "admin" } ]
     # })
 
-    db.createUser({
-        user: "jeane-user2",
-        pwd: "jinpol",
-        roles: [ { role: "root", db: "admin" } ]
-    })
+    # db.createUser({
+    #     user: "jeane-user2",
+    #     pwd: "jinpol",
+    #     roles: [ { role: "root", db: "admin" } ]
+    # })
 
     # hinode
     db.createUser({
         user: "devops",
-        pwd: "D3+lD79b3rJ7yHo",
+        pwd: "OssuB-eee14",
         roles: [ { role: "root", db: "admin" } ]
     })
 
@@ -58,5 +58,10 @@ prod_con_str () {
     echo "a-mongo-0.a-mongo.default.svc.cluster.local,a-mongo-1.a-mongo.default.svc.cluster.local"
 }
 
+
+make () {
+	docker build --tag=gcr.io/b-eee-technology/mongodb:3.4.0 .
+	gcloud docker push gcr.io/b-eee-technology/mongodb:3.4.0    
+}
 
 $*

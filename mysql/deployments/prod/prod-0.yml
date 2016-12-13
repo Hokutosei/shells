@@ -10,12 +10,12 @@ metadata:
     type: mysql
 spec:
   ports:
-  - port: 3340
+  - port: 3306
     name: a-mysql-0
   clusterIP: None
 #   type: NodePort
   selector:
-    # tier: database
+    tier: database
     name: a-mysql-0
 ---
 kind: StorageClass
@@ -61,6 +61,8 @@ spec:
       containers:
       - name: mysql
         image: mysql:5.7.16
+        args:
+          - "--ignore-db-dir=lost+found"
         env:
             - name: MYSQL_ROOT_PASSWORD
               # openssl rand -base64 32
@@ -72,14 +74,10 @@ spec:
               value: devops
             - name: MYSQL_PASSWORD
               value: tHiDF3fEVU1wFnNun09i7N9usuFee8l5V6SZymFEEfI=
-        # command:
-        #   - mongod
-        #   - "--replSet"
-        #   - rs0
         imagePullPolicy: Always
         ports:
         - containerPort: 3306
-          hostPort: 3340
+          hostPort: 3306
           name: mysql
         resources:
           requests:

@@ -3,25 +3,25 @@ kind: Service
 metadata:
   annotations:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
-  name: a-mongo-1
+  name: a-redis
   labels:
-    name: a-mongo-1
+    name: a-redis
     tier: database
-    type: mongodb
+    type: redis
 spec:
   ports:
-  - port: 27017
-    name: a-mongo-1
-  clusterIP: None
+  - port: 6379
+    name: redis
   # type: NodePort
+  clusterIP: None
   selector:
     tier: database
-    name: a-mongo-1
+    name: a-redis
 ---
 kind: StorageClass
 apiVersion: storage.k8s.io/v1beta1
 metadata:
-  name: a-mongo-1-pd-ssd
+  name: redis-pd-ssd
 provisioner: kubernetes.io/gce-pd
 parameters:
   type: pd-ssd
@@ -30,56 +30,50 @@ parameters:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: a-mongo-1
+  name: a-redis-data
   annotations:
-    volume.beta.kubernetes.io/storage-class: "a-mongo-1-pd-ssd"
+    volume.beta.kubernetes.io/storage-class: "redis-pd-ssd"
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Gi
+      storage: 10Gi
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: a-mongo-1
+  name: a-redis
 spec:
   replicas: 1
   template:
     metadata:
-      annotations:
-        pod.beta.kubernetes.io/hostname: a-mongo-1
       labels:
-        name: a-mongo-1
+        name: a-redis
         tier: database
     spec:
       volumes:
-        - name: a-mongo-1
+        - name: a-redis
           persistentVolumeClaim:
-            claimName: a-mongo-1
+            claimName: a-redis-data
       containers:
-      - name: mongo
-        image: gcr.io/b-eee-technology/mongodb:3.4.0
+      - name: redis
+        image: gcr.io/b-eee-technology/redis:3.2.3-alpine
         command:
-          - mongod
-          - "--replSet"
-          - rs0
-          - "--auth"
-          - "--keyFile"
-          - /secret/mongodb-keyfile
+          - redis-server
+          - /usr/local/etc/redis/redis.conf
         imagePullPolicy: Always
         ports:
-        - containerPort: 27017
-          hostPort: 27017
-          name: mongo
+        - containerPort: 6379
+          hostPort: 6379
+          name: redis
         resources:
           requests:
             cpu: "0.1m"
-            memory: "64Mi"
-        #   limits:
-        #     cpu: "1"
-        #     memory: "350Mi"
+            memory: "16Mi"
+          limits:
+            cpu: "4"
+            memory: "1000Mi"
         volumeMounts:
-        -  mountPath: /data/db
-           name: a-mongo-1
+        - name: a-redis
+          mountPath: /data/db

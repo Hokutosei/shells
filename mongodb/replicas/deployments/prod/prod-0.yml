@@ -15,7 +15,7 @@ spec:
   clusterIP: None
   # type: NodePort
   selector:
-    # tier: database
+    tier: database
     name: a-mongo-0
 ---
 kind: StorageClass
@@ -38,7 +38,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 50Gi
+      storage: 100Gi
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -60,7 +60,7 @@ spec:
             claimName: a-mongo-0
       containers:
       - name: mongo
-        image: gcr.io/b-eee-technology/mongodb:3.4
+        image: gcr.io/b-eee-technology/mongodb:3.4.0
         command:
           - mongod
           - "--replSet"
