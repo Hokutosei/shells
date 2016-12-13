@@ -2,17 +2,23 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: linker-prod
+  # annotations:
+  #   nginx.org/ssl-services: "b-eee-lp-s"
 spec:
+  tls:
+  - hosts:
+    - linker-app.com
+    secretName: linker-secret
   rules:
-  - host: foo.bar.com
+  - host: linker-app.com
     http:
       paths:
       - backend:
-          serviceName: b-eee-lp
+          serviceName: b-eee-lp-s
           servicePort: 80
-  - host: app.bar.com
+  - host: www.linker-app.com
     http:
       paths:
       - backend:
           serviceName: beee-ui
-          servicePort: 80          
+          servicePort: 80
