@@ -1,0 +1,3 @@
+.kube/
+mysql/deployments/stg/.kube
+../mysql/deployments/stg/.kube

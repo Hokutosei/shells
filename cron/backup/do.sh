@@ -23,8 +23,26 @@ deploy () {
                 bkp_cron
 }
 
+deploy_win () {
+    dir=/c/Users/jeanepaul/Development/go/src/shells/cron/backup
+    docker run -d \
+                -e NEO4J=107.167.181.111 \
+                -e NEO4J_PORT=6362 \
+                -e MONGODB=104.199.173.158 \
+                -e M_PORT=27017 \
+                -e M_DATABASE=beee-dev \
+                -v $dir/bkp/mongodb:/mongodb \
+                -v $dir/bkp/neo4j:/neo4j/backup \
+                -v $dir/neo4j/bin:/neo4j/bin \
+                bkp_cron
+}
+
 build () {
     make
+}
+
+build_win () {
+    docker build --no-cache --tag=bkp_cron .
 }
 
 $*

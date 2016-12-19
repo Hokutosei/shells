@@ -1,11 +1,11 @@
-FROM alpine:3.3
+FROM alpine:edge
 
 RUN apk update
 RUN apk add ca-certificates
 
-RUN echo 'http://dl-3.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
+RUN echo 'http://dl-4.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
 RUN apk upgrade --update
-RUN apk add mongodb-tools docker
+RUN apk add mongodb docker
 RUN mkdir /bkp
 
 COPY backup.sh /backup.sh

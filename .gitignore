@@ -1,0 +1,9 @@
+.vscode/settings.json
+ingress/.kube/schema/v1.4.6/api/v1/schema.json
+ingress/b.txt
+ingress/bundle.crt
+ingress/certs/DigiCertCA.crt
+*.txt
+ingress/certs/TrustedRoot.crt
+*.crtmysql/deployments/stg/.kube/
+mysql/deployments/stg/.kube/

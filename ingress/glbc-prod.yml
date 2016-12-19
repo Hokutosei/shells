@@ -53,7 +53,7 @@ spec:
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: nginx-ingress-controller
+  name: nginx-ingress-rc
   labels:
     k8s-app: nginx-ingress-lb
 spec:
@@ -98,12 +98,6 @@ spec:
           hostPort: 80
         - containerPort: 443
           hostPort: 443
-        - containerPort: 3306
-          hostPort: 3306
-          protocol: TCP          
-        - containerPort: 27018
-          hostPort: 27018
-          protocol: TCP                    
         # we expose 18080 to access nginx stats in url /nginx-status
         # this is optional
         - containerPort: 18080
@@ -111,4 +105,3 @@ spec:
         args:
         - /nginx-ingress-controller
         - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
-        - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-rdb
