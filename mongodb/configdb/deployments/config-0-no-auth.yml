@@ -10,7 +10,7 @@ metadata:
     type: mongodb
 spec:
   ports:
-  - port: 27017
+  - port: 27019
     name: config-0
   clusterIP: None
   # type: NodePort
@@ -60,19 +60,19 @@ spec:
             claimName: config-0
       containers:
       - name: mongo
-        image: mongo:3.4
+        image: gcr.io/b-eee-technology/mongodb:3.4.0
         command:
           - mongod
           - "--configsvr"
           - "--replSet"
           - config-0
-        #   - "--auth"
-        #   - "--keyFile"
-        #   - /secret/mongodb-keyfile
+          - "--auth"
+          - "--keyFile"
+          - /secret/mongodb-keyfile
         imagePullPolicy: Always
         ports:
-        - containerPort: 27017
-          hostPort: 27017
+        - containerPort: 27019
+          hostPort: 27019
           name: mongo
         resources:
           requests:
