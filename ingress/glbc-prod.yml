@@ -98,6 +98,12 @@ spec:
           hostPort: 80
         - containerPort: 443
           hostPort: 443
+        - containerPort: 3306
+          hostPort: 3306
+          protocol: TCP          
+        - containerPort: 27017
+          hostPort: 27017
+          protocol: TCP                              
         # we expose 18080 to access nginx stats in url /nginx-status
         # this is optional
         - containerPort: 18080
@@ -105,3 +111,4 @@ spec:
         args:
         - /nginx-ingress-controller
         - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
+        - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-rdb
