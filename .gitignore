@@ -7,3 +7,4 @@ ingress/certs/DigiCertCA.crt
 ingress/certs/TrustedRoot.crt
 *.crtmysql/deployments/stg/.kube/
 mysql/deployments/stg/.kube/
+mongodb/configdb/deployments/.kube/
