@@ -100,7 +100,19 @@ spec:
           hostPort: 443
         - containerPort: 3306
           hostPort: 3306
-          protocol: TCP          
+          protocol: TCP 
+        - containerPort: 4150
+          hostPort: 4150
+          protocol: TCP                    
+        - containerPort: 4151
+          hostPort: 4151
+          protocol: TCP 
+        - containerPort: 4161
+          hostPort: 4161
+          protocol: TCP
+        - containerPort: 4171
+          hostPort: 4171
+          protocol: TCP                             
         - containerPort: 27018
           hostPort: 27018
           protocol: TCP                    
@@ -112,3 +124,4 @@ spec:
         - /nginx-ingress-controller
         - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
         - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-rdb
+        - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-nsq

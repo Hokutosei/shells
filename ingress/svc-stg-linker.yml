@@ -13,5 +13,16 @@ spec:
     name: tcp-mysql
   - port: 27018
     name: tcp-mongodb
+  - port: 4150
+    targetPort: 4150
+    name: tcp-nsq0
+  - port: 4151
+    name: tcp-nsq1
+  - port: 4161
+    name: tcp-nsq2
+  - port: 4171
+    name: tcp-nsq3
+  - port: 9002
+    name: minio
   selector:
     app: nginx-ingress-controller
