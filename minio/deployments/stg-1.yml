@@ -10,45 +10,49 @@ metadata:
     type: minio
 spec:
   ports:
-  - port: 9002
+  - port: 80
     targetPort: 9000
-    name: minio0
-  clusterIP: None
+    name: http
+  - port: 9000
+    targetPort: 9000
+    name: tcp
+  # clusterIP: None
   selector:
     name: a-minio-1
----
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: a-minio-1
-spec:
-  replicas: 1
-  template:
-    metadata:
-      annotations:
-        pod.beta.kubernetes.io/hostname: a-minio-1
-      labels:
-        name: a-minio-1
-        tier: minio
-    spec:
-      containers:
-      - name: minio
-        image: minio/minio
-        command:
-          - minio
-          - "server"
-          - "/export/docker"
-        # env:
-        #     - name: minio_PASSWORD
-        #       value: tHiDF3fEVU1wFnNun09i7N9usuFee8l5V6SZymFEEfI=
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 9000
-          hostPort: 9000
-        resources:
-          requests:
-            cpu: "0.1m"
-            memory: "64Mi"
-          limits:
-            cpu: "1"
-            memory: "350Mi"
+  type: LoadBalancer
+# ---
+# apiVersion: extensions/v1beta1
+# kind: Deployment
+# metadata:
+#   name: a-minio-1
+# spec:
+#   replicas: 1
+#   template:
+#     metadata:
+#       annotations:
+#         pod.beta.kubernetes.io/hostname: a-minio-1
+#       labels:
+#         name: a-minio-1
+#         tier: minio
+#     spec:
+#       containers:
+#       - name: minio
+#         image: minio/minio
+#         command:
+#           - minio
+#           - "server"
+#           - "/export/docker"
+#         # env:
+#         #     - name: minio_PASSWORD
+#         #       value: tHiDF3fEVU1wFnNun09i7N9usuFee8l5V6SZymFEEfI=
+#         imagePullPolicy: Always
+#         ports:
+#         - containerPort: 9000
+#           hostPort: 9000
+#         resources:
+#           requests:
+#             cpu: "0.1m"
+#             memory: "64Mi"
+#           limits:
+#             cpu: "1"
+#             memory: "350Mi"
