@@ -8,7 +8,7 @@ metadata:
     nginx.org/websocket-services: "a-nsq-1"
 spec:
   tls:
-  - secretName: linker-secret  
+  - secretName: linker-secret
     hosts:
     - stg-www.b-eee.io
     - stg.b-eee.io
@@ -18,16 +18,21 @@ spec:
       paths:
       - backend:
           serviceName: b-eee-lp
-          servicePort: 80  
+          servicePort: 80
   - host: stg.b-eee.io
     http:
       paths:
       - backend:
           serviceName: beee-ui
           servicePort: 80
-      - backend:
-          serviceName: a-nsq-1
-          servicePort: 4150
-      - backend:
-          serviceName: nsqlookup
-          servicePort: 4161
+      - path: /minio
+        backend:
+          serviceName: a-minio-1
+          servicePort: 9002
+
+      # - backend:
+      #     serviceName: a-nsq-1
+      #     servicePort: 4150
+      # - backend:
+      #     serviceName: nsqlookup
+      #     servicePort: 4161

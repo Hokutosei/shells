@@ -35,8 +35,9 @@ spec:
       - name: minio
         image: minio/minio
         command:
-          - server
-          - "/export"
+          - minio
+          - "server"
+          - "/export/docker"
         # env:
         #     - name: minio_PASSWORD
         #       value: tHiDF3fEVU1wFnNun09i7N9usuFee8l5V6SZymFEEfI=
