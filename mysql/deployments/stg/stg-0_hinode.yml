@@ -69,7 +69,7 @@ spec:
               # WbC87sE0wJopjU0eqqaetTA/GFCaodWBoM6/0h23QE8=
               value: OssuB-eee14
             - name: MYSQL_DATABASE
-              value: b-eee-dev
+              value: hinode
             - name: MYSQL_USER
               value: devops
             - name: MYSQL_PASSWORD
