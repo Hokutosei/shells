@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: tcp-configmap-minio
 data:
-  9002: "default/a-minio-1:9002"
+  9000: "default/a-minio-1-api:9000"

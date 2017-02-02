@@ -6,6 +6,7 @@ metadata:
     kubernetes.io/tls-acme: "true"
     kubernetes.io/ingress.class: "nginx"
     nginx.org/websocket-services: "a-nsq-1"
+    nginx/client_max_body_size: 100m
 spec:
   tls:
   - secretName: linker-secret
@@ -25,11 +26,16 @@ spec:
       - backend:
           serviceName: beee-ui
           servicePort: 80
-      - path: /minio
-        backend:
+  - host: stg-minio.b-eee.io
+    http:
+      paths:
+      - backend:
           serviceName: a-minio-1
-          servicePort: 9002
-
+          servicePort: 80
+      - backend:
+          serviceName: a-minio-1-api
+          servicePort: 9000
+    
       # - backend:
       #     serviceName: a-nsq-1
       #     servicePort: 4150

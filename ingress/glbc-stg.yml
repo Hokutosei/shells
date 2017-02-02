@@ -118,6 +118,8 @@ spec:
           protocol: TCP
         - containerPort: 9002
           hostPort: 9002
+        - containerPort: 9000
+          hostPort: 9000
         # we expose 18080 to access nginx stats in url /nginx-status
         # this is optional
         - containerPort: 18080

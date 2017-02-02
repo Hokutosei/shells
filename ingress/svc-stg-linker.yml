@@ -22,7 +22,8 @@ spec:
     name: tcp-nsq2
   - port: 4171
     name: tcp-nsq3
-  - port: 9002
+  - port: 9000
+    targetPort: 9000
     name: minio
   selector:
     app: nginx-ingress-controller
