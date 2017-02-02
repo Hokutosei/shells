@@ -1,4 +1,5 @@
 .vscode/settings.json
+.idea/
 ingress/.kube/schema/v1.4.6/api/v1/schema.json
 ingress/b.txt
 ingress/bundle.crt

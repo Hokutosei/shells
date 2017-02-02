@@ -43,6 +43,9 @@ spec:
       containers:
       - name: nats
         image: nats:0.9.4
+        args:
+        - "--user=devops"
+        - "--pass=OssuB-eee14"
         # env:
         #     - name: nats_PASSWORD
         #       value: tHiDF3fEVU1wFnNun09i7N9usuFee8l5V6SZymFEEfI=
