@@ -58,20 +58,13 @@ spec:
         name: a-elasticsearch-0
         tier: database
     spec:
-      # volumes:
-      #   - name: a-elasticsearch-0
-      #     persistentVolumeClaim:
-      #       claimName: a-elasticsearch-0
+      volumes:
+        - name: a-elasticsearch-0
+          persistentVolumeClaim:
+            claimName: a-elasticsearch-0
       containers:
       - name: elasticsearch
         image: beee/elasticsearch:latest
-        # args:
-        #   - elasticsearch
-        # env:
-        #     - name: elasticsearch_ROOT_PASSWORD
-        #       # openssl rand -base64 32
-        #       # WbC87sE0wJopjU0eqqaetTA/GFCaodWBoM6/0h23QE8=
-        #       value: WbC87sE0wJopjU0eqqaetTA/GFCaodWBoM6/0h23QE8=
         imagePullPolicy: Always
         ports:
         - containerPort: 9200
@@ -83,10 +76,9 @@ spec:
         resources:
           requests:
             cpu: "0.1m"
-            memory: "64Mi"
-          limits:
-            cpu: "1"
-            memory: "1050Mi"
-        # volumeMounts:
-        # -  mountPath: /usr/share/elasticsearch/data
-        #    name: a-elasticsearch-0
+            memory: "16Mi"
+        volumeMounts:
+        -  mountPath: /usr/share/elasticsearch/data
+           name: a-elasticsearch-0            
+      nodeSelector:
+        cloud.google.com/gke-nodepool: pool-1

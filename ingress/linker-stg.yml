@@ -26,6 +26,12 @@ spec:
       - backend:
           serviceName: beee-ui
           servicePort: 80
+  - host: stg-n4j.b-eee.io
+    http:
+      paths:
+      - backend:
+          serviceName: a-neo4j-0
+          servicePort: 80  
   - host: stg-minio.b-eee.io
     http:
       paths:

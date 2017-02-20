@@ -25,5 +25,8 @@ spec:
   - port: 9000
     targetPort: 9000
     name: minio
+  - port: 7474
+    targetPort: 7474
+    name: a-neo4j-0
   selector:
     app: nginx-ingress-controller
