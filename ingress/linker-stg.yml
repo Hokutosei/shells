@@ -26,12 +26,12 @@ spec:
       - backend:
           serviceName: beee-ui
           servicePort: 80
-  - host: stg-n4j.b-eee.io
+  - host: stg-nfj.b-eee.io
     http:
       paths:
       - backend:
           serviceName: a-neo4j-0
-          servicePort: 80  
+          servicePort: 80
   - host: stg-minio.b-eee.io
     http:
       paths:
@@ -41,7 +41,7 @@ spec:
       - backend:
           serviceName: a-minio-1-api
           servicePort: 9000
-    
+
       # - backend:
       #     serviceName: a-nsq-1
       #     servicePort: 4150

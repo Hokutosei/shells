@@ -2,16 +2,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: a-neo4j
+  name: a-neo4j-0
   labels:
-    name: a-neo4j
+    name: a-neo4j-0
 spec:
   ports:
     # the port that this service should serve on
-  - port: 7474
+  - port: 80
     targetPort: 7474
     name: "browser"
-  clusterIP: None    
+  clusterIP: None
   selector:
     name: a-neo4j-0
 
@@ -50,8 +50,8 @@ spec:
 #   resources:
 #     requests:
 #       storage: 50Gi
-# ---
 # new API name
+# ---
 # apiVersion: "apps/v1beta1"
 # kind: StatefulSet
 # metadata:
@@ -91,7 +91,7 @@ spec:
 #             }
 #         ]'
 #       labels:
-#         app: a-neo4j-0
+#         name: a-neo4j-0
 #     spec:
 #       containers:
 #       - name: a-neo4j-0
@@ -124,4 +124,4 @@ spec:
 #       accessModes: [ "ReadWriteOnce" ]
 #       resources:
 #         requests:
-#           storage: 10Gi          
+#           storage: 10Gi
