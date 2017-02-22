@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: beee-mailfetcher
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: beee-mailfetcher
+    spec:
+      containers:
+      - name: beee-mailfetcher
+        image: gcr.io/smartstage-159404/beee-mailfetcher:latest
+        env:
+          - name: ENV
+            value: dev
+          - name: APP_NAME
+            value: beee-mailfetcher

@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: web-ui
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: beee-ui
+    spec:
+      containers:
+      - name: beee-ui
+        image: gcr.io/smartstage-159404/beee-ui:latest
+        env:
+          - name: ENV
+            value: dev
+          - name: API_ADDRESS
+            value: "beee-apicore"
+          - name: API_SERVER_PORT
+            value: '9000'
+        ports:
+        - containerPort: 4000
+          hostPort: 4000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beee-ui
+  labels:
+    name: beee-ui
+spec:
+  ports:
+  - port: 80
+    targetPort: 4000
+    name: "http"
+  selector:
+    name: beee-ui

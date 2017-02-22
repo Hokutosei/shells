@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tcp-configmap-nsq
+data:
+  4150: "default/a-nsq-1:4150"
+  4151: "default/a-nsq-1:4151"
+  4161: "default/nsqlookup:4161"
+  4171: "default/a-nsq-1:4171"

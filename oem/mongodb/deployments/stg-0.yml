@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: a-mongo-0
+  labels:
+    name: a-mongo-0
+    tier: database
+    type: mongodb
+spec:
+  ports:
+  - port: 27017
+    name: a-mongo-0
+  clusterIP: None
+  # type: NodePort
+  selector:
+    # tier: database
+    name: a-mongo-0
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1beta1
+metadata:
+  name: a-mongo-0-pd-ssd
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+  zone: asia-northeast1-a
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: a-mongo-0
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "a-mongo-0-pd-ssd"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: a-mongo-0
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        pod.beta.kubernetes.io/hostname: a-mongo-0
+      labels:
+        name: a-mongo-0
+        tier: database
+    spec:
+      volumes:
+        - name: a-mongo-0
+          persistentVolumeClaim:
+            claimName: a-mongo-0
+      containers:
+      - name: mongo
+        image: gcr.io/smartstage-159404/mongodb:3.4.0
+        command:
+          - mongod
+          - "--replSet"
+          - rs0
+          - "--auth"
+          - "--keyFile"
+          - /secret/mongodb-keyfile
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 27017
+          hostPort: 27017
+          name: mongo
+        resources:
+          requests:
+            cpu: "0.1m"
+            memory: "64Mi"
+        #   limits:
+        #     cpu: "1"
+        #     memory: "350Mi"
+        volumeMounts:
+        -  mountPath: /data/db
+           name: a-mongo-0

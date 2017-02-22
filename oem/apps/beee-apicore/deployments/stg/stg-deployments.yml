@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: apicore
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: beee-apicore
+    spec:
+      containers:
+      - name: apicore
+        image: gcr.io/smartstage-159404/beee-apicore:latest
+        env:
+          - name: ENV
+            value: dev
+          - name: MIGRATION
+            value: "1"
+          - name: APP_MONGODB
+            value: "beee-dev"
+        ports:
+        - containerPort: 9000
+          hostPort: 9000
+        # resources:
+        #   requests:
+        #     cpu: "0.1m"
+        #     memory: "64Mi"
+        #   limits:
+        #     cpu: "1"
+        #     memory: "350Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: beee-apicore
+  name: beee-apicore
+spec:
+  ports:
+  - port: 9000
+    targetPort: 9000
+  selector:
+    name: beee-apicore

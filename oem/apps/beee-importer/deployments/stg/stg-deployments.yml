@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: importer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: beee-importer
+    spec:
+      imagePullSecrets:
+        - name: "myregistrykey"
+      containers:
+      - name: "beee-importer"
+        image: gcr.io/smartstage-159404/beee-importer:latest
+        env:
+          - name: ENV
+            value: dev
+        ports:
+        - containerPort: 8080
+          hostPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: beee-importer
+  name: beee-importer
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    name: beee-importer
