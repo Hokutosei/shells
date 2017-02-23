@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: beee-ui
-        image: gcr.io/smartstage-159404/beee-ui:latest
+        image: gcr.io/smartstage-159404/beee-web-ui:latest
         env:
           - name: ENV
             value: dev

@@ -2,8 +2,10 @@
 # cd <APP REPOSITORY ROOT DIR>
 # path/to/this/deploy.sh <ENV> <APP_NAME>  // deploy.sh stg web-ui
 
-APP_NAME=${APP_NAME:-$2}
 PROJECT_ID=${PROJECT_ID:-smartstage-159404}
+
+APP_NAME=${APP_NAME:-$2}
+CONTAINER_NAME=${CONTAINER_NAME:-beee-$APP_NAME}
 DEPLOYMENT_ROOT_DIR=${DEPLOYMENT_ROOT_DIR:-../shells/oem}
 
 DOCKER_API_VERSION=1.23
@@ -17,43 +19,46 @@ print "DIR= $DEPLOYMENT_ROOT_DIR "
 print "deploying to $1 ==============="
 
 
-make
+#make
 
 case $1 in
   stg) print "deploying to k8s gce $1"
     #CTL_ENV=${CTL_ENV:-dev}
 
-#    print "build container"
-#    docker build --tag=gcr.io/smartstage-159404/beee-lp:latest -f docker/app/Dockerfile .
+    print "build container"
+    cd $GOPATH/src/$APP_NAME &&
 
-    print "retag container"
-    docker tag beee/$APP_NAME:latest gcr.io/$PROJECT_ID/$APP_NAME:latest
+    print "pull deploy code"
+    git checkout develop &&
+    git pull origin develop &&
+
+    if [ "$APP_NAME" -ne "web-ui" ]; then
+        GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o bin/linux_amd64
+    fi
+    docker build --tag=gcr.io/$PROJECT_ID/$CONTAINER_NAME:latest --no-cache -f docker/app/Dockerfile . &&
 
     print "pushing container to GCR"
-    gcloud docker push gcr.io/$PROJECT_ID/$APP_NAME:latest
+    gcloud docker push gcr.io/$PROJECT_ID/$CONTAINER_NAME:latest &&
 
-    print "stopping $APP_NAME"
+    print "stopping $CONTAINER_NAME"
     kubectl delete -f $DEPLOYMENT_ROOT_DIR/apps/$APP_NAME/deployments/$1/$1-deployments.yml
 
-    print "creating $APP_NAME pod"
+    print "creating $CONTAINER_NAME pod"
     kubectl create -f $DEPLOYMENT_ROOT_DIR/apps/$APP_NAME/deployments/$1/$1-deployments.yml
     
     print "finish deploy $1"
     ;;
 
   prod) print "deploying to k8s $1"
-    #CTL_ENV=${CTL_ENV:-production}
-
-    print "retag container"
-    docker tag beee/$APP_NAME gcr.io/$PROJECT_ID/$APP_NAME:latest
+    CTL_ENV=${CTL_ENV:-production}
 
     print "pushing container to GCR"
-    gcloud docker push gcr.io/$PROJECT_ID/$APP_NAME:latest
+    gcloud docker push gcr.io/$PROJECT_ID/$CONTAINER_NAME:latest
 
-    print "stopping $APP_NAME"
-    kubectl delete rc $APP_NAME
+    print "stopping $CONTAINER_NAME"
+    kubectl delete rc $CONTAINER_NAME
 
-    print "creating $APP_NAME pod"
+    print "creating $CONTAINER_NAME pod"
     kubectl create -f docker/app/$CTL_ENV-$CONTROLLER_NAME-controller.yml
     
     print "finish deploy $1"
@@ -62,3 +67,6 @@ case $1 in
   local) echo "deploy to local"
   ;;
 esac
+
+print "show pods"
+kubectl get pods -o wide

@@ -27,7 +27,8 @@ metadata:
     name: b-eee-lp
 spec:
   ports:
-  - port: 10000
+  - port: 80
     targetPort: 10000
+    name: "http"
   selector:
     name: beee-lp
