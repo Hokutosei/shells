@@ -34,11 +34,14 @@ spec:
     spec:
       containers:
       - name: mongo
-        image: mongo:3.4.2
+        image: gcr.io/b-eee-technology/mongodb:3.4.0
         command:
           - mongos
           - "--configdb"
           - "config-0/config-0:27019"
+          - "--transitionToAuth"
+          - "--keyFile"
+          - /secret/mongodb-keyfile
           - "--port"
           - "27017"
         imagePullPolicy: Always

@@ -60,12 +60,15 @@ spec:
             claimName: config-0
       containers:
       - name: mongo
-        image: mongo:3.4.2
+        image: gcr.io/b-eee-technology/mongodb:3.4.0
         command:
           - mongod
           - "--configsvr"
           - "--replSet"
           - config-0
+          - "--auth"
+          - "--keyFile"
+          - /secret/mongodb-keyfile
         imagePullPolicy: Always
         ports:
         - containerPort: 27019
