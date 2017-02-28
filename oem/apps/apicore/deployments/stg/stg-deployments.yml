@@ -15,10 +15,16 @@ spec:
         env:
           - name: ENV
             value: dev
+          - name: DEBUG_SQL
+            value: "true"
           - name: MIGRATION
             value: "1"
           - name: APP_MONGODB
             value: "beee-dev"
+          - name: SESSION_EXPIRE_OFFSET
+            value: "345600"
+          - name: MESSAGING_BACKEND
+            value: nsq
         ports:
         - containerPort: 9000
           hostPort: 9000
