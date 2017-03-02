@@ -5,4 +5,4 @@ metadata:
 data:
   3306: "default/a-mysql-0:3306"
   27018: "default/a-mongo-0:27017"
-  7474: "default/a-neo4j-0:7474"
+  # 7474: "default/a-neo4j-0:7474"

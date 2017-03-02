@@ -127,7 +127,6 @@ spec:
         args:
         - /nginx-ingress-controller
         - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
-        - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-rdb
-        - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-nsq
-        #- --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-minio
-        - --configmap=$(POD_NAMESPACE)/nginx-ingress-sticky-session        
+        # - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-rdb
+        - --configmap=$(POD_NAMESPACE)/nginx-ingress-sticky-session
+        - --v=2
