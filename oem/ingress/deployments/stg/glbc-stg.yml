@@ -129,5 +129,5 @@ spec:
         - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
         - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-rdb
         - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-nsq
-        - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-minio
+        #- --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-minio
         - --configmap=$(POD_NAMESPACE)/nginx-ingress-sticky-session        
