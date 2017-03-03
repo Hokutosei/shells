@@ -60,7 +60,7 @@ spec:
             claimName: a-mongo-0
       containers:
       - name: mongo
-        image: mongo:3.3.10
+        image: mongo:3.4.2
         command:
           - mongod
           - "--replSet"

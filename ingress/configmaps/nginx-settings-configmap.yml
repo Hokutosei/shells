@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  body-size: "1024m"
+  client-max-body-size: "1024m"
+  proxy-body-size: "1024m"
+metadata:
+  name: nginx-settings-configmap
