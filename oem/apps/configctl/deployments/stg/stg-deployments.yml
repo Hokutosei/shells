@@ -15,8 +15,8 @@ spec:
         env:
           - name: ENV
             value: dev
-#          - name: DB_IMPORT
-#            value: "true"
+          - name: DB_IMPORT
+            value: "true"
 #          - name: REDIS_HOST
 #            value: a-redis:6379
 #          - name: REDIS_PASSWORD
