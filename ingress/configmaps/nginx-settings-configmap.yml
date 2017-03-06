@@ -4,5 +4,7 @@ data:
   body-size: "1024m"
   client-max-body-size: "1024m"
   proxy-body-size: "1024m"
+  proxy-read-timeout: "3600"
+  proxy-send-timeout: "3600"
 metadata:
   name: nginx-settings-configmap
