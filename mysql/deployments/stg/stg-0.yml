@@ -63,6 +63,8 @@ spec:
         image: mysql:5.7.16
         args:
           - "--ignore-db-dir=lost+found"
+          - "--character-set-server=utf8"
+          - "--skip-grant-tables"
         env:
             - name: MYSQL_ROOT_PASSWORD
               # openssl rand -base64 32

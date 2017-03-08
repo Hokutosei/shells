@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: tcp-configmap-minio
-data:
-  9000: "default/a-minio-1-api:9000"
