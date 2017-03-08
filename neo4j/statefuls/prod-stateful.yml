@@ -11,6 +11,9 @@ spec:
   - port: 80
     targetPort: 7474
     name: "browser"
+  - port: 7474
+    targetPort: 7474
+    name: "api"    
   clusterIP: None
   selector:
     name: a-neo4j-0
@@ -18,9 +21,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: a-neo4j-0-1
+  name: a-neo4j-1
   labels:
-    name: a-neo4j-0-1
+    name: a-neo4j-1
 spec:
   ports:
     # the port that this service should serve on
@@ -89,7 +92,7 @@ spec:
                 "command": ["/bin/sh", "-c", "echo \"
                 unsupported.dbms.edition=enterprise\n
                 dbms.mode=CORE\n
-                dbms.connectors.default_advertised_address=$HOSTNAME.neo4j.default.svc.cluster.local\n
+                dbms.connectors.default_advertised_address=$HOSTNAME.a-neo4j-0.default.svc.cluster.local\n
                 dbms.connectors.default_listen_address=0.0.0.0\n
                 dbms.connector.bolt.type=BOLT\n
                 dbms.connector.bolt.enabled=true\n
@@ -97,8 +100,9 @@ spec:
                 dbms.connector.http.type=HTTP\n
                 dbms.connector.http.enabled=true\n
                 dbms.connector.http.listen_address=0.0.0.0:7474\n
+                dbms.read_only=false\n
                 causal_clustering.raft_messages_log_enable=true\n
-                causal_clustering.initial_discovery_members=neo4j-0-0.a-neo4j-0.default.svc.cluster.local:5000,a-neo4j-0.neo4j.default.svc.cluster.local:5000\n
+                causal_clustering.initial_discovery_members=a-neo4j-0-0.a-neo4j-0.default.svc.cluster.local:5000,a-neo4j-0-1.a-neo4j-0.default.svc.cluster.local:5000\n
                 causal_clustering.leader_election_timeout=2s\n
                   \" > /work-dir/neo4j.conf" ],
                 "volumeMounts": [
@@ -141,10 +145,6 @@ spec:
       name: a-neo4j-0
       annotations:
         volume.alpha.kubernetes.io/storage-class: anything
-#   - metadata:
-#       name: confdir
-#       annotations:
-#         volume.alpha.kubernetes.io/storage-class: anything        
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
