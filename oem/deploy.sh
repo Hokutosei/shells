@@ -32,9 +32,9 @@ case $1 in
     git checkout develop &&
     git pull origin develop &&
 
-    if [ "$APP_NAME" -ne "web-ui" ]; then
-        GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o bin/linux_amd64
-    fi
+#    if [ "$APP_NAME" -ne "web-ui" ]; then
+    GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o bin/linux_amd64
+#    fi
     docker build --tag=gcr.io/$PROJECT_ID/$CONTAINER_NAME:latest --no-cache -f docker/app/Dockerfile . &&
 
     print "pushing container to GCR"
