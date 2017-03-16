@@ -8,13 +8,19 @@ metadata:
     ingress.kubernetes.io/affinity: "cookie"
     ingress.kubernetes.io/session-cookie-name: "route"
     ingress.kubernetes.io/session-cookie-hash: "sha1"
-    nginx.org/client-max-body-size: "100m"
+    nginx.org/client-max-body-size: "1024m"
 spec:
   tls:
-  - secretName: linker-secret
-    hosts:
+  - hosts:
     - stg-www.b-eee.io
+    secretName: linker-secret
+  - hosts:
     - stg.b-eee.io
+    secretName: linker-secret
+  # - secretName: linker-secret
+  #   hosts:
+  #   - stg-www.b-eee.io
+  #   - stg.b-eee.io
   rules:
   - host: stg-www.b-eee.io
     http:

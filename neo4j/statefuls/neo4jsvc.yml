@@ -1,0 +1,44 @@
+# Headless service to provide DNS lookup
+apiVersion: v1
+kind: Service
+metadata:
+  name: a-neo4j-0
+  labels:
+    name: a-neo4j-0
+spec:
+  ports:
+    # the port that this service should serve on
+  - port: 80
+    targetPort: 7474
+    name: "browser"
+  - port: 7474
+    targetPort: 7474
+    name: "api"  
+  - port: 6000
+    targetPort: 6000
+    name: "tx"    
+  clusterIP: None
+  selector:
+    name: a-neo4j-0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: a-neo4j-1
+  labels:
+    name: a-neo4j-1
+spec:
+  ports:
+    # the port that this service should serve on
+  - port: 7474
+    targetPort: 7474
+    name: "browser"
+  - port: 5000
+    targetPort: 5000
+    name: "ha"
+  # - port: 6000
+  #   targetPort: 6000
+  #   name: "tx"        
+  clusterIP: None
+  selector:
+    name: a-neo4j-0

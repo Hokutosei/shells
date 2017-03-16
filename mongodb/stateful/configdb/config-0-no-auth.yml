@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: config-0
+  labels:
+    name: config-0
+    tier: database
+    type: mongodb
+spec:
+  ports:
+  - port: 27019
+    name: config-0
+  clusterIP: None
+  selector:
+    name: config-0
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: config-0
+spec:
+  serviceName: config-0
+  replicas: 2
+  template:
+    metadata:
+      annotations:
+        pod.beta.kubernetes.io/hostname: config-0
+      labels:
+        name: config-0
+        tier: database
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:3.4.2
+        command:
+          - mongod
+          - "--configsvr"
+          - "--replSet"
+          - config-0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 27019
+          hostPort: 27019
+          name: mongo
+        resources:
+          requests:
+            cpu: "0.1m"
+            memory: "8Mi"
+          limits:
+            cpu: "1"
+            memory: "350Mi"
+        volumeMounts:
+        -  mountPath: /data/db
+           name: config-0
+  volumeClaimTemplates:
+  - metadata:
+      name: config-0
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: anything
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi
+           
