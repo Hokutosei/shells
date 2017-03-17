@@ -1,0 +1,237 @@
+{
+    "globalsearch_template": {
+        "template": "global_search",
+        "order": 0,
+        "settings": {
+            "index": {
+                "analysis": {
+                    "tokenizer": {
+                        "my_tokenizer": {
+                            "type": "kuromoji_neologd_tokenizer",
+                            "mode": "normal",
+                            "discard_punctuation": "true",
+                            "user_dictionary": "userdict_ja.txt"
+                        }
+                    },
+                    "filter": {
+                        "synonym_dict": {
+                            "type": "synonym",
+                            "synonyms_path": "synonym.txt"
+                        },
+                        "pos_filter": {
+                            "type": "kuromoji_part_of_speech",
+                            "stoptags": ["助詞-格助詞-一般", "助詞-終助詞"]
+                        },
+                        "greek_lowercase_filter": {
+                            "type": "lowercase",
+                            "language": "greek"
+                        }
+                    },
+                    "analyzer": {
+                        "default": {
+                            "type": "custom",
+                            "tokenizer": "my_tokenizer",
+                            "filter": [
+                                "synonym_dict",
+                                "kuromoji_baseform",
+                                "pos_filter",
+                                "greek_lowercase_filter",
+                                "cjk_width"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "mappings": {
+            "fulltext_search": {
+                "_all": {
+                    "enabled": true
+                },
+                "_source": {
+                    "enabled": true
+                },
+                "properties": {
+                    "category": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "key_type": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "w_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "p_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "d_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "i_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "f_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "h_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "q_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "a_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "title": {
+                        "type": "text",
+                        "index": "analyzed",
+                        "store": true
+                    },
+                    "value": {
+                        "type": "text",
+                        "index": "analyzed",
+                        "store": true
+                    },
+                    "keys": {
+                        "type": "text",
+                        "index": "analyzed",
+                        "store": true
+                    }
+                }
+            },
+            "file_search": {
+                "_all": {
+                    "enabled": true
+                },
+                "_source": {
+                    "enabled": true
+                },
+                "properties": {
+                    "category": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "key_type": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "w_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "p_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "d_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "i_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "f_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "file_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "h_id": {
+                        "type": "keyword",
+                        "index": "not_analyzed",
+                        "store": true
+                    },
+                    "data": {
+                        "type": "text",
+                        "index": "analyzed",
+                        "store": true
+                    },
+                    "attachment" : {
+                        "properties": {
+                            "author": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "content": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "content_length": {
+                                "type": "long"
+                            },
+                            "content_type": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "date": {
+                                "type": "date"
+                            },
+                            "language": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword"
+                                    }
+                                }
+                            },
+                            "title": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

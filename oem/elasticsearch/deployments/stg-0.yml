@@ -64,7 +64,7 @@ spec:
             claimName: a-elasticsearch-0
       containers:
       - name: elasticsearch
-        image: gcr.io/smartstage-159404/elasticsearch:latest
+        image: gcr.io/smartstage-159404/elasticsearch5-ja:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 9200

@@ -64,7 +64,7 @@ spec:
             claimName: a-elasticsearch-0
       containers:
       - name: elasticsearch
-        image: beee/elasticsearch:latest
+        image: beee/elasticsearch5-ja:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 9200
