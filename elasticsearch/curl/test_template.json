@@ -7,7 +7,7 @@
                 "tokenizer": {
                     "my_tokenizer": {
                         "type": "kuromoji_neologd_tokenizer",
-                        "mode": "normal",
+                        "mode": "search",
                         "discard_punctuation": "true",
                         "user_dictionary": "userdict_ja.txt"
                     }
@@ -17,7 +17,7 @@
                         "type": "synonym",
                         "synonyms_path": "synonym.txt"
                     },
-                    "pos_filter": {
+                    "part_of_speech": {
                         "type": "kuromoji_part_of_speech",
                         "stoptags": ["助詞-格助詞-一般", "助詞-終助詞"]
                     },
@@ -32,9 +32,10 @@
                         "tokenizer": "my_tokenizer",
                         "filter": [
                             "synonym_dict",
-                            "kuromoji_baseform",
-                            "pos_filter",
+                            "part_of_speech",
                             "greek_lowercase_filter",
+                            "kuromoji_baseform",
+                            "kuromoji_stemmer",
                             "cjk_width"
                         ]
                     }

@@ -15,3 +15,12 @@ delete index
 ```
 curl -XDELETE -uelastic http://(HOST_IP):9200/global_search
 ```
+
+
+---
+
+check indexed data
+```
+curl -XGET -uelastic http://104.198.89.246:9200/global_search/file_search/58cd077efbfcba2d6c055330
+```
+
