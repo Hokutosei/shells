@@ -58,11 +58,6 @@
                         "index": "not_analyzed",
                         "store": true
                     },
-                    "key_type": {
-                        "type": "keyword",
-                        "index": "not_analyzed",
-                        "store": true
-                    },
                     "w_id": {
                         "type": "keyword",
                         "index": "not_analyzed",
@@ -133,11 +128,6 @@
                         "index": "not_analyzed",
                         "store": true
                     },
-                    "key_type": {
-                        "type": "keyword",
-                        "index": "not_analyzed",
-                        "store": true
-                    },
                     "w_id": {
                         "type": "keyword",
                         "index": "not_analyzed",
@@ -171,6 +161,21 @@
                     "h_id": {
                         "type": "keyword",
                         "index": "not_analyzed",
+                        "store": true
+                    },
+                    "title": {
+                        "type": "text",
+                        "index": "analyzed",
+                        "store": true
+                    },
+                    "value": {
+                        "type": "text",
+                        "index": "analyzed",
+                        "store": true
+                    },
+                    "keys": {
+                        "type": "text",
+                        "index": "analyzed",
                         "store": true
                     },
                     "data": {
