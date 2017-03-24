@@ -28,5 +28,11 @@ spec:
   - port: 7474
     targetPort: 7474
     name: a-neo4j-0
+  - port: 6362
+    targetPort: 6362
+    name: d-neo4j-0-backup
+  - port: 4002
+    targetPort: 4002
+    name: linker-proxy
   selector:
     app: nginx-ingress-controller

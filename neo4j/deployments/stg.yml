@@ -13,32 +13,35 @@ spec:
   - port: 7474
     targetPort: 7474
     name: "api"  
+  - port: 6362
+    targetPort: 6362
+    name: "backup"  
   clusterIP: None
   selector:
     name: d-neo4j-0
 ---
-kind: StorageClass
-apiVersion: storage.k8s.io/v1beta1
-metadata:
-  name: d-neo4j-0-pd-ssd
-provisioner: kubernetes.io/gce-pd
-parameters:
-  type: pd-ssd
-  zone: asia-northeast1-b
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: d-neo4j-0
-  annotations:
-    volume.beta.kubernetes.io/storage-class: "d-neo4j-0-pd-ssd"
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
----    
+# kind: StorageClass
+# apiVersion: storage.k8s.io/v1beta1
+# metadata:
+#   name: d-neo4j-0-pd-ssd
+# provisioner: kubernetes.io/gce-pd
+# parameters:
+#   type: pd-ssd
+#   zone: asia-northeast1-b
+# ---
+# kind: PersistentVolumeClaim
+# apiVersion: v1
+# metadata:
+#   name: d-neo4j-0
+#   annotations:
+#     volume.beta.kubernetes.io/storage-class: "d-neo4j-0-pd-ssd"
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 10Gi
+# ---    
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -67,6 +70,9 @@ spec:
         - containerPort: 7474
           hostPort: 7474
           name: neo4j
+        - containerPort: 6362
+          hostPort: 6362
+          name: backup       
         resources:
           requests:
             cpu: "0.1m"

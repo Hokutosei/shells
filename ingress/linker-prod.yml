@@ -11,10 +11,12 @@ metadata:
     nginx.org/client-max-body-size: "1024m"
 spec:
   tls:
-  - secretName: linker-secret  
-    hosts:
+  - hosts:
     - linker-app.com
+    secretName: linker-secret
+  - hosts:
     - www.linker-app.com
+    secretName: linker-secret
   rules:
   - host: www.linker-app.com
     http:
@@ -28,3 +30,10 @@ spec:
       - backend:
           serviceName: beee-ui
           servicePort: 80
+  - host: nfj.linker-app.com
+    http:
+      paths:
+      - backend:
+          serviceName: d-neo4j-0
+          servicePort: 80          
+          

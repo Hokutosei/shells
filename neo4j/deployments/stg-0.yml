@@ -24,45 +24,48 @@ spec:
     name: browser-internal
   - port: 7687
     targetPort: 7687
-    name: bolt          
+    name: bolt
+  - port: 6362
+    targetPort: 6362
+    name: backup
   clusterIP: None
   selector:
     name: d-neo4j-0
----
-kind: StorageClass
-apiVersion: storage.k8s.io/v1beta1
-metadata:
-  name: d-neo4j-0-pd-ssd
-provisioner: kubernetes.io/gce-pd
-parameters:
-  type: pd-ssd
-  zone: asia-east1-a
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: d-neo4j-0
-  annotations:
-    volume.beta.kubernetes.io/storage-class: "d-neo4j-0-pd-ssd"
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: a-neo4j-0
-  annotations:
-    volume.alpha.kubernetes.io/storage-class: anything
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+# ---
+# kind: StorageClass
+# apiVersion: storage.k8s.io/v1beta1
+# metadata:
+#   name: d-neo4j-0-pd-ssd
+# provisioner: kubernetes.io/gce-pd
+# parameters:
+#   type: pd-ssd
+#   zone: asia-east1-a
+# ---
+# kind: PersistentVolumeClaim
+# apiVersion: v1
+# metadata:
+#   name: d-neo4j-0
+#   annotations:
+#     volume.beta.kubernetes.io/storage-class: "d-neo4j-0-pd-ssd"
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 10Gi
+# ---
+# kind: PersistentVolumeClaim
+# apiVersion: v1
+# metadata:
+#   name: a-neo4j-0
+#   annotations:
+#     volume.alpha.kubernetes.io/storage-class: anything
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 1Gi
       
 ---    
 apiVersion: extensions/v1beta1
@@ -83,10 +86,12 @@ spec:
                 "image": "gcr.io/google_containers/busybox:1.24",
                 "imagePullPolicy": "Always",
                 "command": ["/bin/sh", "-c", "echo \"
-                unsupported.dbms.edition=enterprise\n
                 dbms.security.auth_enabled=false\n
-                dbms.mode=CORE\n
-                dbms.connectors.default_advertised_address=$(hostname -f)\n
+                dbms.backup.enabled=true\n
+                dbms.backup.address=0.0.0.0:6362\n
+                unsupported.dbms.edition=enterprise\n
+                # dbms.mode=CORE\n
+                # dbms.connectors.default_advertised_address=$(hostname -f)\n
                 dbms.connectors.default_listen_address=0.0.0.0\n
                 dbms.connector.bolt.type=BOLT\n
                 dbms.connector.bolt.enabled=true\n
@@ -94,9 +99,9 @@ spec:
                 dbms.connector.http.type=HTTP\n
                 dbms.connector.http.enabled=true\n
                 dbms.connector.http.listen_address=0.0.0.0:7474\n
-                causal_clustering.raft_messages_log_enable=true\n
-                causal_clustering.initial_discovery_members=d-neo4j-0:5000,d-neo4j-1:5000\n
-                causal_clustering.leader_election_timeout=20s\n
+                # causal_clustering.raft_messages_log_enable=true\n
+                # causal_clustering.initial_discovery_members=d-neo4j-0:5000,d-neo4j-1:5000\n
+                # causal_clustering.leader_election_timeout=20s\n
                   \" > /work-dir/neo4j.conf" ],
                 "volumeMounts": [
                     {
@@ -138,6 +143,9 @@ spec:
         - containerPort: 7687
           hostPort: 7687
           name: bolt          
+        - containerPort: 6362
+          hostPort: 6362
+          name: backup                
         resources:
           requests:
             cpu: "0.1m"

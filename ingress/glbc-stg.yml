@@ -124,12 +124,14 @@ spec:
         # this is optional
         - containerPort: 18080
           hostPort: 18080
+        - containerPort: 6362
+          hostPort: 6362 
+        - containerPort: 4002
+          hostPort: 4002      
         args:
         - /nginx-ingress-controller
         - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
         - --configmap=$(POD_NAMESPACE)/nginx-ingress-sticky-session
         - --configmap=$(POD_NAMESPACE)/nginx-settings-configmap
-        - --v=2        
-        - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-rdb
-        - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-nsq
-        - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-minio
+        - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmaps
+        - --v=2
