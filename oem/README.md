@@ -523,11 +523,13 @@ deployment "a-nsq-1" created
 ## neo4j
 ```
 $ cd ../neo4j
-$ kubectl create -f deployments/stg-stateful.yml
+$ kubectl create -f deployments/stg.yml
 ```
 ```
-service "a-neo4j-0" created
-statefulset "a-neo4j-0" created
+service "d-neo4j-0" created
+storageclass "d-neo4j-0-pd-ssd" created
+persistentvolumeclaim "d-neo4j-0" created
+deployment "d-neo4j-0" created
 ```
 
 
@@ -540,24 +542,26 @@ kubectl get services
 ```
 ```
 NAME                CLUSTER-IP      EXTERNAL-IP      PORT(S)                                        AGE
-a-elasticsearch-0   None            <none>           9200/TCP,9300/TCP                              6m
-a-mongo-0           None            <none>           27017/TCP                                      2h
-a-mongo-1           None            <none>           27017/TCP                                      2h
-a-mysql-0           None            <none>           3306/TCP                                       1h
-a-neo4j-0           None            <none>           80/TCP                                         43s
-a-nsq-1             10.79.248.189   35.189.132.189   4150:32754/TCP,4151:32389/TCP,4171:31672/TCP   4m
-a-redis             None            <none>           6379/TCP                                       49m
-kubernetes          10.79.240.1     <none>           443/TCP                                        3h
+a-elasticsearch-0   None            <none>           9200/TCP,9300/TCP                              3h
+a-mongo-0           None            <none>           27017/TCP                                      5h
+a-mongo-1           None            <none>           27017/TCP                                      5h
+a-mysql-0           None            <none>           3306/TCP                                       4h
+a-nsq-1             10.79.248.189   35.189.132.189   4150:32754/TCP,4151:32389/TCP,4171:31672/TCP   3h
+a-redis             None            <none>           6379/TCP                                       4h
+d-neo4j-0           None            <none>           80/TCP,7474/TCP                                7m
+kubernetes          10.79.240.1     <none>           443/TCP                                        7h
 ```
 Storage Class の確認
 ```bash
 kubectl get storageclass
 ```
 ```
+NAME                       KIND
 a-elasticsearch-0-pd-ssd   StorageClass.v1.storage.k8s.io
 a-mongo-0-pd-ssd           StorageClass.v1.storage.k8s.io
 a-mongo-1-pd-ssd           StorageClass.v1.storage.k8s.io
 a-mysql-0-pd-ssd           StorageClass.v1.storage.k8s.io
+d-neo4j-0-pd-ssd           StorageClass.v1.storage.k8s.io
 redis-pd-ssd               StorageClass.v1.storage.k8s.io
 standard                   StorageClass.v1.storage.k8s.io
 ```
@@ -568,20 +572,13 @@ kubectl get pvc
 ```
 ```
 NAME                    STATUS    VOLUME                                     CAPACITY   ACCESSMODES   AGE
-a-elasticsearch-0       Bound     pvc-2ebeb32b-1b82-11e7-a05a-42010a92000f   10Gi       RWO           7m
-a-mongo-0               Bound     pvc-baa44341-1b6f-11e7-a05a-42010a92000f   50Gi       RWO           2h
-a-mongo-1               Bound     pvc-60d3e454-1b72-11e7-a05a-42010a92000f   50Gi       RWO           2h
-a-mysql-0               Bound     pvc-2a3325bb-1b79-11e7-a05a-42010a92000f   10Gi       RWO           1h
-a-neo4j-0-a-neo4j-0-0   Bound     pvc-0b2b63a2-1b83-11e7-a05a-42010a92000f   10Gi       RWO           1m
-a-redis-data            Bound     pvc-32116e28-1b7c-11e7-a05a-42010a92000f   10Gi       RWO           50m
-```
-Stateful Set の確認
-```bash
-kubectl get statefulsets
-```
-```
-NAME        DESIRED   CURRENT   AGE
-a-neo4j-0   1         1         19m
+a-elasticsearch-0       Bound     pvc-b4c9a506-1b84-11e7-a05a-42010a92000f   10Gi       RWO           3h
+a-mongo-0               Bound     pvc-baa44341-1b6f-11e7-a05a-42010a92000f   50Gi       RWO           5h
+a-mongo-1               Bound     pvc-60d3e454-1b72-11e7-a05a-42010a92000f   50Gi       RWO           5h
+a-mysql-0               Bound     pvc-2a3325bb-1b79-11e7-a05a-42010a92000f   10Gi       RWO           4h
+a-neo4j-0-a-neo4j-0-0   Bound     pvc-0b2b63a2-1b83-11e7-a05a-42010a92000f   10Gi       RWO           3h
+a-redis-data            Bound     pvc-32116e28-1b7c-11e7-a05a-42010a92000f   10Gi       RWO           4h
+d-neo4j-0               Bound     pvc-6ce2b056-1b9f-11e7-a05a-42010a92000f   10Gi       RWO           8m
 ```
 
 Pod の確認
@@ -590,13 +587,13 @@ kubectl get pods
 ```
 ```
 NAME                                 READY     STATUS    RESTARTS   AGE
-a-elasticsearch-0-1786370560-gdp93   1/1       Running   0          7m
-a-mongo-0-82809908-mw47n             1/1       Running   0          3m
-a-mongo-1-1028953145-pf1rb           1/1       Running   0          2h
-a-mysql-0-3056041181-ncn0n           1/1       Running   0          5m
-a-neo4j-0-0                          1/1       Running   0          21s
-a-nsq-1-3852233018-683s5             1/1       Running   1          23m
-a-redis-4099930026-03p40             1/1       Running   0          3m
+a-elasticsearch-0-1786370560-xdn6n   1/1       Running   0          44m
+a-mongo-0-82809908-h8rvj             1/1       Running   0          42m
+a-mongo-1-1028953145-pf1rb           1/1       Running   0          5h
+a-mysql-0-3056041181-0r4vm           1/1       Running   0          42m
+a-nsq-1-3852233018-683s5             1/1       Running   1          3h
+a-redis-4099930026-qf7fw             1/1       Running   0          41m
+d-neo4j-0-3932975958-nm4z8           1/1       Running   0          9m
 ```
 
 
