@@ -19,7 +19,7 @@ spec:
     name: a-mysql-0
 ---
 kind: StorageClass
-apiVersion: storage.k8s.io/v1beta1
+apiVersion: storage.k8s.io/v1
 metadata:
   name: a-mysql-0-pd-ssd
 provisioner: kubernetes.io/gce-pd

@@ -1,6 +1,5 @@
 FROM elasticsearch:5.2.1-alpine
 
-#RUN bin/elasticsearch-plugin install x-pack --batch
 RUN bin/elasticsearch-plugin install analysis-kuromoji --batch
 RUN bin/elasticsearch-plugin install ingest-attachment --batch
 RUN bin/elasticsearch-plugin install org.codelibs:elasticsearch-analysis-kuromoji-neologd:5.2.1 --batch

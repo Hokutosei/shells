@@ -19,7 +19,7 @@ spec:
     name: a-redis
 ---
 kind: StorageClass
-apiVersion: storage.k8s.io/v1beta1
+apiVersion: storage.k8s.io/v1
 metadata:
   name: redis-pd-ssd
 provisioner: kubernetes.io/gce-pd
@@ -58,7 +58,7 @@ spec:
             claimName: a-redis-data
       containers:
       - name: redis
-        image: gcr.io/smartstage-159404/redis:3.2.3-alpine
+        image: gcr.io/bizplatform-ix-production/redis:3.2.3-alpine
         command:
           - redis-server
           - /usr/local/etc/redis/redis.conf

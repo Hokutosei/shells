@@ -1,5 +1,5 @@
 # BUILD GKE Cluster for OEM
-## ドキュメントの前提
+### ドキュメントの前提
  - mac ox
  - installed kubectl
  - GCP上のプロジェクトに 編集者(editor)権限
@@ -9,9 +9,13 @@
 2. enable API
     - API Manager -> ENABLE API -> Compute Engine API  
 3. create container cluster
-    - create cluster from webUI 
-4. enable Container Registry
-    - click from webUI 
+    - Menu > Container Engine > クラスタを作成 
+    - node pool の作成
+        - default-node[n1-standard-1]   x2　作成
+        - pool-1[n1-standard-1]  x1  作成（elasticsearch用）
+    
+4. Container Registry　をenableに
+    - Menu > Container Registry > enableボタンをクリック 
 
 ### 確認
 クラスタノードの確認
@@ -24,8 +28,7 @@ gke-ix-stg-default-pool-9015e997-5jbr   Ready     1h
 gke-ix-stg-default-pool-9015e997-l1hf   Ready     1h
 ```
 
-## 構築
-### MONGODBのビルド、デプロイ、設定
+## MONGODBのビルド、デプロイ、設定
 
 secure mongodb containerのビルド
 ```bash
@@ -270,13 +273,261 @@ rs0:PRIMARY> exit
 bye
 ```
 
+## MySQLのデプロイ、準備
+#### デプロイ
+```bash
+$ cd ../mysql
+$ kubectl create -f mysql/deployments/stg-0.yml
+```
+```
+service "a-mysql-0" created
+storageclass "a-mysql-0-pd-ssd" created
+persistentvolumeclaim "a-mysql-0" created
+deployment "a-mysql-0" created
+```
+Podの確認、コンテナへログイン
+```bash
+$ kubectl get pods
+```
+```
+NAME                         READY     STATUS    RESTARTS   AGE
+a-mongo-0-82809908-tv04h     1/1       Running   0          1h
+a-mongo-1-1028953145-pf1rb   1/1       Running   0          50m
+a-mysql-0-3056041181-ntl9g   1/1       Running   1          2m
+```
+```bash
+$ kubectl exec -it a-mysql-0-3056041181-ntl9g /bin/bash
+```
+```bash
+root@a-mysql-0:/# mysql -uroot -p
+```
+パスワードを入力
+```bash
+Enter password:
+```
+```
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 3
+Server version: 5.7.17 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>
+```
+データベースを作成 (use back-tick ` for db name )
+```
+mysql> create database `b-eee-dev`;
+Query OK, 1 row affected (0.01 sec)
+```
+確認
+```
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| b-eee-dev          |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+```
+
+以上
+```
+mysql> quit
+Bye
+root@a-mysql-0:/# exit
+exit
+```
 
 
+## Redisのビルド、デプロイ
+#### コンテナのBuild、Push
+```bash
+$ cd ../redis
+$ ./do.sh make
+```
+```
+Sending build context to Docker daemon  48.64kB
+Step 1/3 : FROM redis:3.2.3-alpine
+ ---> 39fcd4ff9767
+Step 2/3 : COPY redis.conf /usr/local/etc/redis/redis.conf
+ ---> 35feb5cff5dd
+Removing intermediate container 7f4bf75747d9
+Step 3/3 : CMD redis-server /usr/local/etc/redis/redis.conf
+ ---> Running in 10a82080e895
+ ---> d71962b24859
+Removing intermediate container 10a82080e895
+Successfully built d71962b24859
+The push refers to a repository [gcr.io/bizplatform-ix-production/redis]
+e286afaaa8b6: Pushed
+e563ba9af84a: Pushed
+31d459b0aa2e: Pushed
+faaa2b77199e: Pushed
+e12005373f68: Pushed
+072948560e04: Pushed
+9007f5987db3: Pushed
+3.2.3-alpine: digest: sha256:76f1df7f7e0e8171c0175da6b26dd4051473a340fe673bcc26c345c7a9cc535d size: 1777
+```
+
+#### Deploy
+```bash
+$ kubectl create -f deployments/stg-single.yml
+```
+```
+service "a-redis" created
+storageclass "redis-pd-ssd" created
+persistentvolumeclaim "a-redis-data" created
+deployment "a-redis" created
+```
+#### 確認
+```bash
+$ kubectl get pods
+```
+```
+NAME                         READY     STATUS    RESTARTS   AGE
+a-mongo-0-82809908-tv04h     1/1       Running   0          1h
+a-mongo-1-1028953145-pf1rb   1/1       Running   0          1h
+a-mysql-0-3056041181-ntl9g   1/1       Running   1          22m
+a-redis-4099930026-k73r6     1/1       Running   0          1m
+```
+```bash
+$ kubectl exec -it a-redis-4099930026-k73r6 redis-cli
+```
+```bash
+127.0.0.1:6379> AUTH (password)
+OK
+```
+(password) は、redis/redis.conf内の `requirepass` に指定されている
+
+```bash
+127.0.0.1:6379> KEYS *
+(empty list or set)
+```
+以上
+```
+127.0.0.1:6379> exit
+```
+
+## elasticsearchのBuild,Deploy
+コンテナのBuild ,Push
+```bash
+$ cd ../elasticsearch/docker
+$ ./do.sh build
+```
+```
+Sending build context to Docker daemon  15.87kB
+Step 1/7 : FROM elasticsearch:5.2.1-alpine
+ ---> 5a41a9c72cff
+Step 2/7 : RUN bin/elasticsearch-plugin install analysis-kuromoji --batch
+ ---> Running in 9e59711e549b
+-> Downloading analysis-kuromoji from elastic
+[=================================================] 100%
+-> Installed analysis-kuromoji
+ ---> 5681f24b26aa
+Removing intermediate container 9e59711e549b
+Step 3/7 : RUN bin/elasticsearch-plugin install ingest-attachment --batch
+ ---> Running in c2b789bfe77a
+-> Downloading ingest-attachment from elastic
+[=================================================] 100%
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@     WARNING: plugin requires additional permissions     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+* java.lang.RuntimePermission getClassLoader
+* java.lang.reflect.ReflectPermission suppressAccessChecks
+* java.security.SecurityPermission createAccessControlContext
+* java.security.SecurityPermission insertProvider
+* java.security.SecurityPermission putProviderProperty.BC
+See http://docs.oracle.com/javase/8/docs/technotes/guides/security/permissions.html
+for descriptions of what these permissions allow and the associated risks.
+-> Installed ingest-attachment
+ ---> 0eeaa44f4efb
+Removing intermediate container c2b789bfe77a
+Step 4/7 : RUN bin/elasticsearch-plugin install org.codelibs:elasticsearch-analysis-kuromoji-neologd:5.2.1 --batch
+ ---> Running in 54c8c6bd13bb
+-> Downloading org.codelibs:elasticsearch-analysis-kuromoji-neologd:5.2.1 from maven central
+[=================================================] 100%
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@     WARNING: plugin requires additional permissions     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+* java.lang.RuntimePermission accessDeclaredMembers
+* java.lang.RuntimePermission getClassLoader
+* java.lang.reflect.ReflectPermission suppressAccessChecks
+See http://docs.oracle.com/javase/8/docs/technotes/guides/security/permissions.html
+for descriptions of what these permissions allow and the associated risks.
+-> Installed analysis-kuromoji-neologd
+ ---> a5ae274f02cb
+Removing intermediate container 54c8c6bd13bb
+Step 5/7 : COPY userdict_ja.txt /usr/share/elasticsearch/config/userdict_ja.txt
+ ---> b850b99947a0
+Removing intermediate container 3560323518d5
+Step 6/7 : COPY synonym.txt /usr/share/elasticsearch/config/synonym.txt
+ ---> 2d38a3174c6f
+Removing intermediate container 8c8c2ab3201d
+Step 7/7 : COPY globalsearch_template.json /usr/share/elasticsearch/config/globalsearch_template.json
+ ---> e21307f25d74
+Removing intermediate container 2b98583aa00b
+Successfully built e21307f25d74
+The push refers to a repository [gcr.io/bizplatform-ix-production/elasticsearch5-ja]
+62d54c33034e: Pushed
+36bf059d8770: Pushed
+3f858c6d1d74: Pushed
+6b73034ccc4a: Pushed
+c5b65cac9ffa: Pushed
+a962b7dc34c3: Pushed
+a7f82ae52d46: Pushed
+ce5eb65afc5c: Pushed
+bc5d99113bbd: Pushed
+0227e2521da2: Pushed
+b5179e9e72cd: Pushed
+494d9dab3fce: Pushed
+6f7515f19096: Pushed
+da07d9b32b00: Pushed
+7cbcbac42c44: Pushed
+latest: digest: sha256:ce717c9c977bf502eaca2f11ce49725449cfbf021ef8f9776b4c5c7cc9bc6d65 size: 3455
+```
+上記、WARNING:は無視して問題ない
+
+### Deploy
+```
+$ cd ..
+$ kubectl create -f deployments/stg-0.yml
+```
+```
+service "a-elasticsearch-0" created
+storageclass "a-elasticsearch-0-pd-ssd" created
+persistentvolumeclaim "a-elasticsearch-0" created
+deployment "a-elasticsearch-0" created
+```
+
+## nsq のデプロイ
+```
+$ cd ../nsq
+$ kubectl create -f deployments/stg-1.yml
+```
+```
+service "a-nsq-1" created
+deployment "a-nsq-1" created
+```
 
 
-
-
-
+## neo4j
+```
+$ cd ../neo4j
+$ kubectl create -f deployments/stg-stateful.yml
+```
+```
+service "a-neo4j-0" created
+statefulset "a-neo4j-0" created
+```
 
 
 
@@ -287,10 +538,27 @@ bye
 kubectl get services
 ```
 ```
-NAME         CLUSTER-IP    EXTERNAL-IP   PORT(S)     AGE
-a-mongo-0    None          <none>        27017/TCP   20m
-a-mongo-1    None          <none>        27017/TCP   1m
-kubernetes   10.79.240.1   <none>        443/TCP     1h
+NAME                CLUSTER-IP      EXTERNAL-IP      PORT(S)                                        AGE
+a-elasticsearch-0   None            <none>           9200/TCP,9300/TCP                              6m
+a-mongo-0           None            <none>           27017/TCP                                      2h
+a-mongo-1           None            <none>           27017/TCP                                      2h
+a-mysql-0           None            <none>           3306/TCP                                       1h
+a-neo4j-0           None            <none>           80/TCP                                         43s
+a-nsq-1             10.79.248.189   35.189.132.189   4150:32754/TCP,4151:32389/TCP,4171:31672/TCP   4m
+a-redis             None            <none>           6379/TCP                                       49m
+kubernetes          10.79.240.1     <none>           443/TCP                                        3h
+```
+Storage Class の確認
+```bash
+kubectl get storageclass
+```
+```
+a-elasticsearch-0-pd-ssd   StorageClass.v1.storage.k8s.io
+a-mongo-0-pd-ssd           StorageClass.v1.storage.k8s.io
+a-mongo-1-pd-ssd           StorageClass.v1.storage.k8s.io
+a-mysql-0-pd-ssd           StorageClass.v1.storage.k8s.io
+redis-pd-ssd               StorageClass.v1.storage.k8s.io
+standard                   StorageClass.v1.storage.k8s.io
 ```
 
 Persistent Volume Claim の確認
@@ -298,19 +566,38 @@ Persistent Volume Claim の確認
 kubectl get pvc
 ```
 ```
-NAME        STATUS    VOLUME                                     CAPACITY   ACCESSMODES   AGE
-a-mongo-0   Bound     pvc-baa44341-1b6f-11e7-a05a-42010a92000f   50Gi       RWO           20m
-a-mongo-1   Bound     pvc-60d3e454-1b72-11e7-a05a-42010a92000f   50Gi       RWO           2m
+NAME                    STATUS    VOLUME                                     CAPACITY   ACCESSMODES   AGE
+a-elasticsearch-0       Bound     pvc-2ebeb32b-1b82-11e7-a05a-42010a92000f   10Gi       RWO           7m
+a-mongo-0               Bound     pvc-baa44341-1b6f-11e7-a05a-42010a92000f   50Gi       RWO           2h
+a-mongo-1               Bound     pvc-60d3e454-1b72-11e7-a05a-42010a92000f   50Gi       RWO           2h
+a-mysql-0               Bound     pvc-2a3325bb-1b79-11e7-a05a-42010a92000f   10Gi       RWO           1h
+a-neo4j-0-a-neo4j-0-0   Bound     pvc-0b2b63a2-1b83-11e7-a05a-42010a92000f   10Gi       RWO           1m
+a-redis-data            Bound     pvc-32116e28-1b7c-11e7-a05a-42010a92000f   10Gi       RWO           50m
 ```
+Stateful Set の確認
+```bash
+kubectl get statefulsets
+```
+```
+NAME        DESIRED   CURRENT   AGE
+a-neo4j-0   1         1         19m
+```
+
 Pod の確認
 ```bash
 kubectl get pods
 ```
 ```
-NAME                         READY     STATUS    RESTARTS   AGE
-a-mongo-0-82809908-tv04h     1/1       Running   0          21m
-a-mongo-1-1028953145-pf1rb   1/1       Running   0          2m
+NAME                                 READY     STATUS    RESTARTS   AGE
+a-elasticsearch-0-1786370560-gdp93   1/1       Running   0          7m
+a-mongo-0-82809908-mw47n             1/1       Running   0          3m
+a-mongo-1-1028953145-pf1rb           1/1       Running   0          2h
+a-mysql-0-3056041181-ncn0n           1/1       Running   0          5m
+a-neo4j-0-0                          1/1       Running   0          21s
+a-nsq-1-3852233018-683s5             1/1       Running   1          23m
+a-redis-4099930026-03p40             1/1       Running   0          3m
 ```
+
 
 
 
