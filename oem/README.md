@@ -24,8 +24,9 @@ $ kubectl get nodes
 ```
 ```
 NAME                                    STATUS    AGE
-gke-ix-stg-default-pool-9015e997-5jbr   Ready     1h
-gke-ix-stg-default-pool-9015e997-l1hf   Ready     1h
+gke-ix-stg-default-pool-9015e997-5jbr   Ready     4h
+gke-ix-stg-default-pool-9015e997-l1hf   Ready     4h
+gke-ix-stg-pool-1-caa32221-w2br         Ready     19m
 ```
 
 ## MONGODBのビルド、デプロイ、設定
@@ -93,7 +94,7 @@ Questions? Try the support group
 >
 ```
 
-####管理ユーザの作成
+#### 管理ユーザの作成
 admin dbの選択
 ```
 > use admin
@@ -120,7 +121,7 @@ Successfully added user: {
 	]
 }
 ```
-####レプリカ作成
+#### レプリカ作成
 レプリカの初期化
 ```
 > rs.initiate()
