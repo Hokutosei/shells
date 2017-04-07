@@ -19,7 +19,7 @@ spec:
     name: a-mongo-1
 ---
 kind: StorageClass
-apiVersion: storage.k8s.io/v1beta1
+apiVersion: storage.k8s.io/v1
 metadata:
   name: a-mongo-1-pd-ssd
 provisioner: kubernetes.io/gce-pd
@@ -60,7 +60,7 @@ spec:
             claimName: a-mongo-1
       containers:
       - name: mongo
-        image: gcr.io/smartstage-159404/mongodb:3.4.0
+        image: gcr.io/bizplatform-ix-production/mongodb:3.4.0
         command:
           - mongod
           - "--replSet"
