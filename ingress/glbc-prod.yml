@@ -111,8 +111,8 @@ spec:
         args:
         - /nginx-ingress-controller
         - --default-backend-service=$(POD_NAMESPACE)/default-http-backend
-        - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-configmap-rdb
         - --configmap=$(POD_NAMESPACE)/nginx-ingress-sticky-session
         - --configmap=$(POD_NAMESPACE)/nginx-settings-configmap
         - --v=2        
-        
+      nodeSelector:
+        kubernetes.io/hostname: gke-linker-prod-pool-1-35b14166-fxzs
