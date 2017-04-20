@@ -13,7 +13,7 @@ spec:
         - name: "myregistrykey"
       containers:
       - name: "beee-importer"
-        image: gcr.io/smartstage-159404/beee-importer:latest
+        image: gcr.io/bizplatform-ix-production/beee-importer:latest
         env:
           - name: ENV
             value: dev

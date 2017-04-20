@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: beee-mailfetcher
-        image: gcr.io/smartstage-159404/beee-mailfetcher:latest
+        image: gcr.io/bizplatform-ix-production/beee-mailfetcher:latest
         env:
           - name: ENV
             value: dev

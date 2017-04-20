@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: beee-configctl
-        image: gcr.io/smartstage-159404/beee-configctl:latest
+        image: gcr.io/bizplatform-ix-production/beee-configctl:latest
         env:
           - name: ENV
             value: dev

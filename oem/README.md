@@ -403,13 +403,13 @@ a-redis-4099930026-k73r6     1/1       Running   0          1m
 ```bash
 $ kubectl exec -it a-redis-4099930026-k73r6 redis-cli
 ```
-```bash
+```
 127.0.0.1:6379> AUTH (password)
 OK
 ```
 (password) は、redis/redis.conf内の `requirepass` に指定されている
 
-```bash
+```
 127.0.0.1:6379> KEYS *
 (empty list or set)
 ```
@@ -521,7 +521,7 @@ deployment "a-nsq-1" created
 
 
 ## neo4j
-```
+```bash
 $ cd ../neo4j
 $ kubectl create -f deployments/stg.yml
 ```
@@ -531,14 +531,23 @@ storageclass "d-neo4j-0-pd-ssd" created
 persistentvolumeclaim "d-neo4j-0" created
 deployment "d-neo4j-0" created
 ```
+パスワードの設定(UIから設定)
+```bash
+$ kubectl port-forward d-neo4j-0-3932975958-nm4z8 7474:7474
+```
+- ブラウザからアクセス `http://localhost:7474/browser/`
+- 左下Gearアイコンをクリックし、`Browser Settings` をひらく
+- BOLT+ROUTING内の `Do not use Bolt`にチェックを入れる
+- 初期ユーザ＆パスワード `neo4j`/`neo4j` でログイン
+- 次の画面で初期パスワードを入力
 
-
+以上
 
 ## 確認
 
 サービスの確認
 ```bash
-kubectl get services
+$ kubectl get services
 ```
 ```
 NAME                CLUSTER-IP      EXTERNAL-IP      PORT(S)                                        AGE
@@ -553,7 +562,7 @@ kubernetes          10.79.240.1     <none>           443/TCP                    
 ```
 Storage Class の確認
 ```bash
-kubectl get storageclass
+$ kubectl get storageclass
 ```
 ```
 NAME                       KIND
@@ -568,7 +577,7 @@ standard                   StorageClass.v1.storage.k8s.io
 
 Persistent Volume Claim の確認
 ```bash
-kubectl get pvc
+$ kubectl get pvc
 ```
 ```
 NAME                    STATUS    VOLUME                                     CAPACITY   ACCESSMODES   AGE
@@ -583,7 +592,7 @@ d-neo4j-0               Bound     pvc-6ce2b056-1b9f-11e7-a05a-42010a92000f   10G
 
 Pod の確認
 ```bash
-kubectl get pods
+$ kubectl get pods
 ```
 ```
 NAME                                 READY     STATUS    RESTARTS   AGE
@@ -597,21 +606,73 @@ d-neo4j-0-3932975958-nm4z8           1/1       Running   0          9m
 ```
 
 
+## マイクロサービスのデプロイ
+インストールの順番
+1. configctl
+2. apicore
+3. notificator
+4. importer
+5. 
+```
+```
+
+- git checkout from github
+
+```bash
+$ cd configctl
+```
+###  設定ファイルの準備
+```bash
+
+```
+- GCP　 Storageの準備、バケット作成
+- Sendgrid API Key準備
+- Sentry　Key
+
+### コンテナのビルドとPush、デプロイ
+
+#### コンテナの作成、登録
+stagingの場合
+```bash
+$ git pull origin develop
+$ ./do.sh build_push bizplatform-ix-production
+```
+productionの場合
+```bash
+$ git pull origin master
+./do.sh build_push bizplatform-ix-production
+```
+#### コンテナのデプロイ
+
+デプロイフォルダへ移動
+```bash
+$ cd shells/oem/apps
+```
+
+すでに作成されている場合（再作成のとき）
+#### for staging
+```bash
+$ kubectl delete -f apps/[microservice-name]/depleyments/stg-deployments.yml 
+$ kubectl create -f apps/[microservice-name]/depleyments/stg-deployments.yml 
+```
+#### for production
+```bash
+$ kubectl delete -f apps/[microservice-name]/depleyments/prod-deployments.yml 
+$ kubectl create -f apps/[microservice-name]/depleyments/prod-deployments.yml 
+```
 
 
 
+## LB (Ingress) のデプロイ
+デプロイフォルダへ移動
+```bash
+$ cd shells/oem/ingress
+```
 
+Cert情報をデプロイ
+```
 
-
-
-
-
-
-
-
-
-
-
+```
 
 
 
