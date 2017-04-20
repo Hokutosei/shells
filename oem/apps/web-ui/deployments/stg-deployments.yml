@@ -22,6 +22,8 @@ spec:
         ports:
         - containerPort: 4000
           hostPort: 4000
+      nodeSelector:
+        cloud.google.com/gke-nodepool: default-pool
 ---
 apiVersion: v1
 kind: Service

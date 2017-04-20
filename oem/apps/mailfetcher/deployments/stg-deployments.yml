@@ -17,3 +17,5 @@ spec:
             value: dev
           - name: APP_NAME
             value: beee-mailfetcher
+      nodeSelector:
+        cloud.google.com/gke-nodepool: default-pool
