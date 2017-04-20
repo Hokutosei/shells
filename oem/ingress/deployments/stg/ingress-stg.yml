@@ -12,22 +12,22 @@ metadata:
 spec:
   tls:
   - hosts:
-    - staging.bixplatform-ix.com
+    - staging.bizplatform-ix.com
     secretName: bpix-secret
   - hosts:
-    - staging-lp.bixplatform-ix.com
-    secretName: lbpix-secret
+    - staging-lp.bizplatform-ix.com
+    secretName: bpix-secret
 #  - hosts:
-#    - staging-admin.bixplatform-ix.com
-#    secretName: lbpix-secret
+#    - staging-admin.bizplatform-ix.com
+#    secretName: bpix-secret
   rules:
-  - host: staging-lp.bixplatform-ix.com
+  - host: staging-lp.bizplatform-ix.com
     http:
       paths:
       - backend:
           serviceName: b-eee-lp
           servicePort: 80  
-  - host: staging.bixplatform-ix.com
+  - host: staging.bizplatform-ix.com
     http:
       paths:
       - backend:

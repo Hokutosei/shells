@@ -9,9 +9,5 @@ spec:
     name: http
   - port: 443
     name: https
-#  - port: 3306
-#    name: tcp-mysql
-#  - port: 27017
-#    name: tcp-mongodb
   selector:
     app: nginx-ingress-rc

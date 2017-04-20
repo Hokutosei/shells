@@ -649,7 +649,7 @@ $ git pull origin master
 $ cd shells/oem/apps
 ```
 
-すでに作成されている場合（再作成のとき）
+デプロイ（delete は再作成のときのみ必要）
 #### for staging
 ```bash
 $ kubectl delete -f apps/[microservice-name]/depleyments/stg-deployments.yml 
@@ -664,24 +664,77 @@ $ kubectl create -f apps/[microservice-name]/depleyments/prod-deployments.yml
 
 
 ## LB (Ingress) のデプロイ
+※注意：　以下 production環境の場合は、stg部分をprodに変更して実行
+
 デプロイフォルダへ移動
 ```bash
 $ cd shells/oem/ingress
 ```
 
+Certファイルをエンコード
+```bash
+$ base64 -i bizplatform-ix.com/bizplatform-ix.com.crt
+$ base64 -i bizplatform-ix.com/bizplatform-ix.com.key
+```
+
+XXXX部分に、それぞれエンコードされた情報を貼り付け
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bpix-secret
+type: Opaque
+data:
+  tls.crt: XXXX
+  tls.key: XXXX
+```
+
 Cert情報をデプロイ
+```bash
+$ kubectl create -f deployments/cert/cert_bpix.yml
+```
+```
+secret "bpix-secret" created
 ```
 
+ConfigMapをデプロイ
+```bash
+$ kubectl create -f deployments/stg/configmaps/nginx-settings-configmap.yml
+```
+```
+configmap "nginx-settings-configmap" created
+```
+```bash
+$ kubectl create -f deployments/stg/configmaps/sticky-sessions.yml
+```
+```
+configmap "nginx-ingress-sticky-session" created
 ```
 
+NodePortをデプロイ
+```
+kubectl create -f deployments/stg/svc-nodeport.yml
+```
+```
+service "nodeport-nginx" created
+```
 
+Ingressのデプロイ
+```bash
+$ kubectl create -f deployments/stg/ingress-stg.yml
+```
+```
+ingress "bpix-stg" created
+```
 
+Nginx-Ingressのデプロイ
+```bash
+$ kubectl create -f deployments/stg/glbc-stg.yml
+```
+```
+replicationcontroller "nginx-ingress-rc" created
+```
 
-
-
-
-
-
-
+以上
 
 
