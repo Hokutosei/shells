@@ -21,6 +21,12 @@ spec:
 #            value: a-redis:6379
 #          - name: REDIS_PASSWORD
 #            value:
+          - name: SYNC_YML_DURATION
+            value: "2"
+          - name: SENTRY_LOGGER
+            value: "1"
+          - name: SENTRY_DSN
+            value: https://65605361f8b04f57aee542309cad344f:fa50858f8b72441b8f05c3dc6e28bf5e@sentry.io/160141
         ports:
         - containerPort: 8083
           hostPort: 8083

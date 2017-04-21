@@ -17,6 +17,10 @@ spec:
         env:
           - name: ENV
             value: dev
+          - name: SENTRY_LOGGER
+            value: "1"
+          - name: SENTRY_DSN
+            value: https://43810d9a2ae2450ebc2365690dfd3493:a64d9e2fd10544ecbedb85ab28723baf@sentry.io/141941
         ports:
         - containerPort: 8080
           hostPort: 8080

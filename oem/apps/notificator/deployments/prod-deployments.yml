@@ -15,6 +15,14 @@ spec:
         env:
           - name: ENV
             value: production
+          - name: MESSAGING_BACKEND
+            value: "nsq"
+          - name: APP_MONGODB
+            value: "beee-dev"
+          - name: SENTRY_LOGGER
+            value: "1"
+          - name: SENTRY_DSN
+            value: https://65605361f8b04f57aee542309cad344f:fa50858f8b72441b8f05c3dc6e28bf5e@sentry.io/160141
         ports:
         - containerPort: 8081
           hostPort: 8081
