@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: beee-mailfetcher
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: beee-mailfetcher
+    spec:
+      containers:
+      - name: beee-mailfetcher
+        image: gcr.io/bizplatform-ix-production/beee-mailfetcher:latest
+        env:
+          - name: ENV
+            value: production
+          - name: APP_NAME
+            value: beee-mailfetcher
+      nodeSelector:
+        cloud.google.com/gke-nodepool: default-pool

@@ -77,5 +77,5 @@ spec:
         volumeMounts:
         - name: a-redis
           mountPath: /data/db
-#      nodeSelector:
-#        cloud.google.com/gke-nodepool: pool-db0
+      nodeSelector:
+        cloud.google.com/gke-nodepool: pool-db0

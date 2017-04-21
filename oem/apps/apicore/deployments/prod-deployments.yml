@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: apicore
 spec:
-  replicas: 2
+  replicas: 3
   template:
     metadata:
       labels:
@@ -14,7 +14,7 @@ spec:
         image: gcr.io/bizplatform-ix-production/beee-apicore:latest
         env:
           - name: ENV
-            value: dev
+            value: production
           - name: DEBUG_SQL
             value: "false"
           - name: MIGRATION

@@ -12,10 +12,26 @@
     - Menu > Container Engine > クラスタを作成 
     - node pool の作成
         - default-node[n1-standard-1]   x2　作成
-        - pool-1[n1-standard-1]  x1  作成（elasticsearch用）
+        - pool-db0[n1-standard-1]  x2  作成（mongodb,mysql,redis用）
+        - pool-db1[n1-standard-1]  x2  作成（elasticsearch用）
+        - pool-lb[n1-standard-1]  x1  作成（nginx用）
     
 4. Container Registry　をenableに
     - Menu > Container Registry > enableボタンをクリック 
+
+### Login
+省略
+
+
+### Clusterの変更
+ - $PROJECT = bizplatform-ix-production
+ - $CLUSTER = ix-prod または ix-stg
+ - $ZONE = asia-northeast1-a
+```bash
+gcloud config set project $PROJECT
+gcloud config set container/cluster $CLUSTER
+gcloud container clusters get-credentials $CLUSTER --zone $ZONE
+```
 
 ### 確認
 クラスタノードの確認
@@ -57,7 +73,7 @@ fadfb904b96a: Pushed
 b6ca02dfe5e6: Layer already exists
 3.4.0: digest: sha256:8d18ef8a99fe405850e27a7795c4d86d73b5e3792deadce8ef16d730980a81fe size: 2406
 ```
-デプロイメント
+デプロイメント（本番環境の場合は、prod-0.yml、prod-1.ymlを利用）
 ```bash
 $ kubectl create -f deployments/stg-0.yml
 ```
@@ -102,6 +118,19 @@ admin dbの選択
 ```
 switched to db admin
 ```
+#### レプリカ作成
+レプリカの初期化
+```
+> rs.initiate()
+```
+```
+{
+	"info2" : "no configuration specified. Using a default configuration for the set",
+	"me" : "a-mongo-0:27017",
+	"ok" : 1
+}
+```
+
 ユーザの作成（パスワードは実際のものを入力する）
 ```
 db.createUser({
@@ -121,18 +150,15 @@ Successfully added user: {
 	]
 }
 ```
-#### レプリカ作成
-レプリカの初期化
+
+管理者ユーザでログイン
 ```
-> rs.initiate()
+rs0:PRIMARY> db.auth("devops","*******")
 ```
 ```
-{
-	"info2" : "no configuration specified. Using a default configuration for the set",
-	"me" : "a-mongo-0:27017",
-	"ok" : 1
-}
+1
 ```
+
 確認
 ```
 rs0:OTHER> rs.status()
@@ -180,13 +206,7 @@ rs0:OTHER> rs.status()
 	"ok" : 1
 }
 ```
-管理者ユーザでログイン
-```
-rs0:PRIMARY> db.auth("devops","*******")
-```
-```
-1
-```
+
 
 
 レプリカの追加
@@ -607,24 +627,27 @@ d-neo4j-0-3932975958-nm4z8           1/1       Running   0          9m
 
 
 ## マイクロサービスのデプロイ
-インストールの順番
+以下の順番で実施（3以降は順不問）
 1. configctl
 2. apicore
 3. notificator
 4. importer
-5. 
-```
-```
+5. web-ui
+6. b-eee-lp
+7. mailfetcher
+8. taskManager
+9. linkerProxy
 
-- git checkout from github
+#### 前提
+- gitからコードを checkout　出来る状態であること
 
+
+### 該当マイクロサービスのディレクトリトップへ移動
 ```bash
-$ cd configctl
+$ cd /path/to/configctl
 ```
 ###  設定ファイルの準備
-```bash
-
-```
+※運用手順書を参照
 - GCP　 Storageの準備、バケット作成
 - Sendgrid API Key準備
 - Sentry　Key
@@ -664,6 +687,21 @@ $ kubectl create -f apps/[microservice-name]/depleyments/prod-deployments.yml
 
 
 ## LB (Ingress) のデプロイ
+### F/W Settings
+1. GCPコンソールから、クラスタ選択
+2. ノード内のインスタンスグループのリンクをクリック
+   - インスタンス名の横にある「外部IP」がグローバルIPとなる
+3. 該当VMインスタンスページへ
+4. 編集→　インスタンス名(例えば、gke-ix-stg-pool-lb-3d554f6e-r20gのような名前)をコピーして、タグへ貼り付け、保存
+5. GCPメニュー→ネットワーキングを選択
+6. ネットワーク→defaultをクリック
+7. 「ファイアウォールルールを追加」
+   - 名前：default-https
+   - ターゲットタグ：先程のインスタンス名を入力
+   - ソースフィルタ：0.0.0.0/0
+   - プロトコルとポート：　tcp:80;tcp:443
+
+### Deploy ingress
 ※注意：　以下 production環境の場合は、stg部分をprodに変更して実行
 
 デプロイフォルダへ移動
@@ -677,7 +715,7 @@ $ base64 -i bizplatform-ix.com/bizplatform-ix.com.crt
 $ base64 -i bizplatform-ix.com/bizplatform-ix.com.key
 ```
 
-XXXX部分に、それぞれエンコードされた情報を貼り付け
+XXXX部分に、それぞれエンコードされた情報を貼り付けて、保存（→ deployments/cert/cert_bpix.yml）
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -734,6 +772,8 @@ $ kubectl create -f deployments/stg/glbc-stg.yml
 ```
 replicationcontroller "nginx-ingress-rc" created
 ```
+
+
 
 以上
 

@@ -1,24 +1,27 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: taskmanager
+  name: linkerproxy
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        name: beee-taskmanager
+        name: beee-linkerproxy
     spec:
       containers:
-      - name: beee-taskmanager
-        image: gcr.io/bizplatform-ix-production/beee-taskmanager:latest
+      - name: beee-linkerproxy
+        image: gcr.io/bizplatform-ix-production/beee-linkerproxy:latest
         env:
           - name: ENV
             value: dev
-#          - name: UNREAD_COMMENT_TASK_INTERVAL
-#            value: "60"
-#          - name: UNREAD_MESSAGE_TEMP
-#            value: "03f02ac0-bacc-4047-b3df-f218cdd206bb"
+          - name: INIT_WHITELIST
+            value: "1"
+          - name: MIGRATION
+            value: "1"
+        ports:
+        - containerPort: 4002
+          hostPort: 4002
         # resources:
         #   requests:
         #     cpu: "0.1m"

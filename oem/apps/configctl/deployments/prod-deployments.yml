@@ -14,7 +14,7 @@ spec:
         image: gcr.io/bizplatform-ix-production/beee-configctl:latest
         env:
           - name: ENV
-            value: dev
+            value: production
           - name: DB_IMPORT
             value: "true"
 #          - name: REDIS_HOST

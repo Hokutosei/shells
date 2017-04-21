@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: bpix-prod
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/affinity: "cookie"
+    ingress.kubernetes.io/session-cookie-name: "route"
+    ingress.kubernetes.io/session-cookie-hash: "sha1"
+    nginx.org/client-max-body-size: "1024m"
+spec:
+  tls:
+  - hosts:
+    - production.bizplatform-ix.com
+    secretName: bpix-secret
+  - hosts:
+    - production-lp.bizplatform-ix.com
+    secretName: bpix-secret
+#  - hosts:
+#    - staging-admin.bizplatform-ix.com
+#    secretName: bpix-secret
+  rules:
+  - host: production-lp.bizplatform-ix.com
+    http:
+      paths:
+      - backend:
+          serviceName: b-eee-lp
+          servicePort: 80  
+  - host: production.bizplatform-ix.com
+    http:
+      paths:
+      - backend:
+          serviceName: beee-ui
+          servicePort: 80
+
+          

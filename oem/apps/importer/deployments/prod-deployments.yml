@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: importer
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -16,7 +16,7 @@ spec:
         image: gcr.io/bizplatform-ix-production/beee-importer:latest
         env:
           - name: ENV
-            value: dev
+            value: production
         ports:
         - containerPort: 8080
           hostPort: 8080

@@ -14,7 +14,7 @@ spec:
         image: gcr.io/bizplatform-ix-production/beee-taskmanager:latest
         env:
           - name: ENV
-            value: dev
+            value: production
 #          - name: UNREAD_COMMENT_TASK_INTERVAL
 #            value: "60"
 #          - name: UNREAD_MESSAGE_TEMP
@@ -28,3 +28,4 @@ spec:
         #     memory: "350Mi"
       nodeSelector:
         cloud.google.com/gke-nodepool: default-pool
+
