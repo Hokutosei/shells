@@ -49,7 +49,7 @@ gke-ix-stg-pool-1-caa32221-w2br         Ready     19m
 
 secure mongodb containerのビルド
 ```bash
-$ cd shells/oem/mongodb/
+$ cd path/to/deployments_root/mongodb/
 $ ./do.sh make
 ```
 ```
@@ -644,7 +644,7 @@ d-neo4j-0-3932975958-nm4z8           1/1       Running   0          9m
 
 ### 該当マイクロサービスのディレクトリトップへ移動
 ```bash
-$ cd /path/to/configctl
+$ cd $GOPATH/configctl
 ```
 ###  設定ファイルの準備
 ※運用手順書を参照
@@ -669,7 +669,7 @@ $ git pull origin master
 
 デプロイフォルダへ移動
 ```bash
-$ cd shells/oem/apps
+$ cd path/to/deployments_root/apps
 ```
 
 デプロイ（delete は再作成のときのみ必要）
@@ -706,7 +706,7 @@ $ kubectl create -f apps/[microservice-name]/depleyments/prod-deployments.yml
 
 デプロイフォルダへ移動
 ```bash
-$ cd shells/oem/ingress
+$ cd path/to/deployments_root/ingress
 ```
 
 Certファイルをエンコード
