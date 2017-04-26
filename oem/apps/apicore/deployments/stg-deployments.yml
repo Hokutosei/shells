@@ -10,7 +10,7 @@ spec:
         name: beee-apicore
     spec:
       containers:
-      - name: apicore
+      - name: beee-apicore
         image: gcr.io/bizplatform-ix-production/beee-apicore:latest
         env:
           - name: ENV
