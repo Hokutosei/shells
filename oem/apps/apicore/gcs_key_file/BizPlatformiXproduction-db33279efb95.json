@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "bizplatform-ix-production",
+  "private_key_id": "db33279efb9501ed387fb072a3d46e6820da251c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDVuYp2FGHCbbrk\nzVkG31Ik6/36+RmotruFy++7bmpjxMfcpCTu8C27AnGe4cOuypacf3JcGrfRnbEW\n1//GWIv6eGmclKcxJymvf+tmOzx5m1KWvUmmAorqPY0wBjw+eFJNIuEwpdqjah1y\nDpI2dYY8czTQl7WobejRDoLSm4vmetiwk3z4s5a7v70T7uvquke7mimGmLpHndu8\nv0nQ6+7LN5SnqU0ojGYXc16wKjJU0poCL+lGXkE/S2E8ywI8c38yG85y5oPR2N/v\nCjijeEohPLum7G2PN3jH3vXDd8Pvyn/ENBkP9guZRcjCbOTpvGnoBTNlzsnQR5kU\nxW/qn8zVAgMBAAECggEBAMjswYr45l8PIeDwXH3lfShQ5FkJzmGaSPkkHKCs0UAy\nQ2LevgoTqiphxceEn563vpgqCK0mQSHDijTbpA4oOJCkm0UlS3keREZFkFxv3A7H\nQwGLuq1jPo2wiAdaFVD1dQonfGVrxvxSSpRrtnGUUzqJZGGl/pX1nibL6ZltujxW\nEOC1+FxtQIlwbORBk7Qt4IQwDEQ9V+GfpLp2s0MLPN/1G/XAwSimPZxoF4r1CBO9\nR/pxAJ6dYm1pUL3Oi8VwhpL1u9ScpeI3qBiObFPcI6JPQwPuVNp1+iKiPrUyvedp\n0qfs05vGtBZ4+2El7wpDI74l8qGniy38NF1hBivEqBECgYEA9xrcXxaGkS+H8oEv\nYV7A3KHojyEnwhEu/ln1cjLHUs1msuoSVRqc2P0ME0wPqei2iLgBTi9qtk/ZgS6k\nsffj6mqjihwQb3Ebp4U2bkmY79Dr/QFaSudC3YxRGTYl65+OZa7IYei7EtOnWCgH\nOyjT4R9Uo/6ZuICD5V2oI+HuiqMCgYEA3WsSo66p0Xt1+WOrcpcA5QAhMFeKSBOh\n6X5Dj5yvyWaqBjW71kKGPJFMASLeAaE40lE1UwJ7zpFTd9FBpamCppCa/c9p0oAY\nTkSatpSKJLhg8Z/DywgKl6PgjsnpJE7whYJNK2iauJA/SChPn79WRM1eml/E4NME\nKWmb5PxdeicCgYAYynIXfBwODtW1x64oN6hjuj6ptWrWtoCfdgkA5wVGUmMeSguC\nzEO2JVUDzpq3sig1+TfwTyOGnOY2ZqaRUExmZUJ5Ba3EcHWUzfGTCQE19iDm5i7X\n2vHDZmNwgxU02XIg03M5F29FSUS9vG5VShhPuqP0PAPSFdqltUq8JtuWvwKBgQCq\nEJCLeh9jD+HoQD6yT/tW6MeVGtfSTooBDoMT7jQyjBExndn9UrFKGgt3n/FG7S74\nk3lSnci8O3ERyX8Tn+QCzXTOV54fGVYR3625aNPGKnwDekPnUPDZ0fwrkDfrNFqX\nISLmoXydH+YLJTMrLsozJE5yYfaU/F7o8/3SXmfp5wKBgQDt9+LlmpQI5ImjZ3o0\nx1XgMtzP1egxcho9mtnPc7Z66AH18Psf0wxIaCX7InI5DVjglkLHrQybI6tzgdzK\nNMxKWxzB1KEWLVWEET+T3XlcXz4tfjMleksPwfrxW7O2Etf2qF/cD+pm4/DRfo2p\nSLJUhWssIJ4lZX9V/OamwzlIGA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "storage-access@bizplatform-ix-production.iam.gserviceaccount.com",
+  "client_id": "117023930894667709805",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/storage-access%40bizplatform-ix-production.iam.gserviceaccount.com"
+}
