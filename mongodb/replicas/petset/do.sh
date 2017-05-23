@@ -73,11 +73,10 @@ deploy () {
     docker run -d \
         -p 27107:27017 \
         -v /db/mongodb:/data/db \
-        --auth \
+        gcr.io/b-eee-technology/mongodb:3.4.0 \
+        mongod --replSet rs0 --auth \
         --keyFile \
         /secret/mongodb-keyfile \
-        gcr.io/b-eee-technology/mongodb:3.4.0 \
-        mongod --replSet res0
 }
 
 $*
