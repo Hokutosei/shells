@@ -26,11 +26,11 @@ teardown () {
     # })
 
     # hinode
-    db.createUser({
-        user: "devops",
-        pwd: "OssuB-eee14",
-        roles: [ { role: "root", db: "admin" } ]
-    })
+    # db.createUser({
+    #     user: "devops",
+    #     pwd: "OssuB-eee14",
+    #     roles: [ { role: "root", db: "admin" } ]
+    # })
 
 # }
 
@@ -62,6 +62,19 @@ prod_con_str () {
 make () {
 	docker build --tag=gcr.io/b-eee-technology/mongodb:3.4.0 .
 	gcloud docker push gcr.io/b-eee-technology/mongodb:3.4.0    
+}
+
+build () {
+	docker build --tag=gcr.io/b-eee-technology/mongodb:3.4.0 .
+}
+
+
+deploy () {
+    docker run -d \
+        -p 27107:27017 \
+        -v /db/mongodb:/data/db \
+        gcr.io/b-eee-technology/mongodb:3.4.0 \
+        mongod --replSet res0
 }
 
 $*
