@@ -17,27 +17,34 @@ spec:
   #     - backend:
   #         serviceName: a-minio-1-api
   #         servicePort: 9000
-  - host: nfj.linker-app.com
+  # - host: nfj.linker-app.com
+  #   http:
+  #     paths:
+  #     - backend:
+  #         serviceName: d-neo4j-0
+  #         servicePort: 80
+  # - host: influx.linker-app.com
+  #   http:
+  #     paths:
+  #     - backend:
+  #         serviceName: chronograf-0
+  #         servicePort: 80
+  # - host: proxy.linker-app.com
+  #   http:
+  #     paths:
+  #     - backend:
+  #         serviceName: beee-linkerproxy
+  #         servicePort: 80          
+  # - host: neo4j-backup
+  #   http:
+  #     paths:
+  #     - backend:
+  #         serviceName: d-neo4j-0
+  #         servicePort: 6362
+  - host: admin.linker-app.com
     http:
       paths:
       - backend:
-          serviceName: d-neo4j-0
+          serviceName: beee-admintool
           servicePort: 80
-  - host: influx.linker-app.com
-    http:
-      paths:
-      - backend:
-          serviceName: chronograf-0
-          servicePort: 80
-  - host: proxy.linker-app.com
-    http:
-      paths:
-      - backend:
-          serviceName: beee-linkerproxy
-          servicePort: 80          
-  - host: neo4j-backup
-    http:
-      paths:
-      - backend:
-          serviceName: d-neo4j-0
-          servicePort: 6362
+  
