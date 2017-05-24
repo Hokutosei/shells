@@ -21,6 +21,8 @@ spec:
 #            value: a-redis:6379
 #          - name: REDIS_PASSWORD
 #            value:
+          - name: CRON_SYNC_DEV
+            value: "false"
           - name: SYNC_YML_DURATION
             value: "2"
           - name: SENTRY_LOGGER

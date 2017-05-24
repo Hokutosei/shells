@@ -1,0 +1,52 @@
+local:slack:
+    slackToken: ""
+    slackChannelID: ""
+
+dev:slack:
+    slackToken: ""
+    slackChannelID: ""
+
+production:slack:
+    slackToken: ""
+    slackChannelID: ""
+
+local:urlRef:
+    webUIDomain: 'localhost'
+    webUIUrl: 'http://localhost:4000'
+    landingPageUrl: 'http://localhost:10000'
+    loginPageImage: 'https://storage.googleapis.com/bpix-pub/login_bg.jpg'
+    defaultPicUrl: 'https://storage.googleapis.com/bpix-pub/default.png'
+
+dev:urlRef:
+    webUIDomain: 'staging.bizplatform-ix.com'
+    webUIUrl: 'https://staging.bizplatform-ix.com'
+    landingPageUrl: 'https://staging-lp.bizplatform-ix.com'
+    loginPageImage: 'https://storage.googleapis.com/bpix-pub/login_bg.jpg'
+    defaultPicUrl: 'https://storage.googleapis.com/bpix-pub/default.png'
+
+production:urlRef:
+    webUIDomain: 'production.bizplatform-ix.com'
+    webUIUrl: 'https://production.bizplatform-ix.com'
+    landingPageUrl: 'https://production-lp.bizplatform-ix.com'
+    loginPageImage: 'https://storage.googleapis.com/bpix-pub/login_bg.jpg'
+    defaultPicUrl: 'https://storage.googleapis.com/bpix-pub/default.png'
+
+local:sendgrid:
+    sendgridUser: "BizPlatform iX"
+    sendgridKey: "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"
+    mailSender: "noreply@bizplatform-ix.com"
+dev:sendgrid:
+    sendgridUser: "BizPlatform iX"
+    sendgridKey: "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"
+    mailSender: "noreply@b-eee.com"
+production:sendgrid:
+    sendgridUser: "BizPlatform iX"
+    sendgridKey: "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"
+    mailSender: "noreply@b-eee.com"
+
+local:sentry_dsn:
+    sentry_dsn: ''
+dev:sentry_dsn:
+    sentry_dsn: 'https://43810d9a2ae2450ebc2365690dfd3493:a64d9e2fd10544ecbedb85ab28723baf@sentry.io/141941'
+prod:sentry_dsn:
+    sentry_dsn: 'https://65605361f8b04f57aee542309cad344f:fa50858f8b72441b8f05c3dc6e28bf5e@sentry.io/160141'

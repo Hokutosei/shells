@@ -1,0 +1,101 @@
+mongodb:
+  local:
+    host:
+    port: 27017
+    username:
+    password:
+    database: beee-dev
+  dev:
+    host: a-mongo-0
+    port: 27017
+    username: devops
+    password: xB9Fp7Wg
+    database: beee-dev
+  production:
+    host: a-mongo-0
+    port: 27017
+    username: devops
+    password: xB9Fp7Wg
+    database: beee-dev
+
+neo4j:
+  local:
+    host: 104.198.89.246
+    port: 7474
+    username: neo4j
+    password:
+  dev:
+    host: d-neo4j-0
+    port: 7474
+    username: neo4j
+    password: xB9Fp7Wg
+  production:
+    host: d-neo4j-0
+    port: 7474
+    username: neo4j
+    password: xB9Fp7Wg
+
+redis:
+  local:
+    host:
+    port: 6379
+    password:
+  dev:
+    host: a-redis
+    port: 6379
+    password: +9AWKLIuchtSIYrdbesRGH14uhfutNos7aZX0JKwPXg=
+  production:
+    host: a-redis
+    port: 6379
+    password: +9AWKLIuchtSIYrdbesRGH14uhfutNos7aZX0JKwPXg=
+
+mysql:
+  local:
+    host:
+    port: 3306
+    database:
+    username:
+    password:
+  dev:
+    host: a-mysql-0
+    port: 3306
+    database: b-eee-dev
+    username: devops
+    password: xB9Fp7Wg
+  production:
+    host: a-mysql-0
+    port: 3306
+    database: b-eee-dev
+    username: devops
+    password: xB9Fp7Wg
+
+nsq:
+  local:
+    host: 0.0.0.0:4222
+    nsqLookupD: 0.0.0.0:4161
+    username:
+    password:
+  dev:
+    host: a-nsq-1:4150
+    nsqLookupD: nsqlookup:4160
+    username:
+    password:
+  production:
+    host: a-nsq-1:4150
+    nsqLookupD:
+    username:
+    password:
+
+elasticsearch:
+  local:
+    host:
+    username: elastic
+    password: changeme
+  dev:
+    host: http://a-elasticsearch-0:9200
+    username: elastic
+    password: changeme
+  production:
+    host: http://a-elasticsearch-0:9200
+    username: elastic
+    password: changeme
