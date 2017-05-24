@@ -29,6 +29,8 @@ spec:
             value: "1"
           - name: SENTRY_DSN
             value: https://65605361f8b04f57aee542309cad344f:fa50858f8b72441b8f05c3dc6e28bf5e@sentry.io/160141
+          - name: SEND_HTTP_ERROR
+            value: "false"
         ports:
         - containerPort: 9000
           hostPort: 9000
