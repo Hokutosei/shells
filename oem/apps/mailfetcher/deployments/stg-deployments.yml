@@ -17,5 +17,9 @@ spec:
             value: dev
           - name: APP_NAME
             value: beee-mailfetcher
+          - name: GCP_STORAGE_BUCKET
+            value: "bpix-mailfetcher_stg"
+          - name: APP_MONGODB
+            value: beee-dev
       nodeSelector:
         cloud.google.com/gke-nodepool: default-pool
