@@ -55,3 +55,9 @@ spec:
       - backend:
           serviceName: sq-apicore
           servicePort: 80
+  - host: sq-userpage.b-eee.io
+    http:
+      paths:
+      - backend:
+          serviceName: sq-userpage
+          servicePort: 80
