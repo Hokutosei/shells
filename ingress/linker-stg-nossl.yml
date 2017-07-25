@@ -36,10 +36,28 @@ spec:
       paths:
       - backend:
           serviceName: beee-linkerproxy
-          servicePort: 4002          
+          servicePort: 4002
   - host: neo4j-backup
     http:
       paths:
       - backend:
           serviceName: d-neo4j-0
           servicePort: 6362
+  - host: status.b-eee.io
+    http:
+      paths:
+      - backend:
+          serviceName: beee-servicestatus
+          servicePort: 80
+  - host: sq.b-eee.io
+    http:
+      paths:
+      - backend:
+          serviceName: sq-apicore
+          servicePort: 80
+  - host: sq-userpage.b-eee.io
+    http:
+      paths:
+      - backend:
+          serviceName: sq-userpage
+          servicePort: 80
