@@ -24,8 +24,8 @@
 
 
 ### Clusterの変更
- - $PROJECT = bizplatform-ix-production
- - $CLUSTER = ix-prod または ix-stg
+ - $PROJECT = [PROJECT_NAME]
+ - $CLUSTER = cluster-name 
  - $ZONE = asia-northeast1-a
 ```bash
 gcloud config set project $PROJECT
@@ -40,9 +40,9 @@ $ kubectl get nodes
 ```
 ```
 NAME                                    STATUS    AGE
-gke-ix-stg-default-pool-9015e997-5jbr   Ready     4h
-gke-ix-stg-default-pool-9015e997-l1hf   Ready     4h
-gke-ix-stg-pool-1-caa32221-w2br         Ready     19m
+gke-cluster-name-default-pool-9015e997-5jbr   Ready     4h
+gke-cluster-name-default-pool-9015e997-l1hf   Ready     4h
+gke-cluster-name-pool-1-caa32221-w2br         Ready     19m
 ```
 
 ## MONGODBのビルド、デプロイ、設定
@@ -60,7 +60,7 @@ Step 2/2 : COPY mongodb-keyfile /secret/
  ---> 861d2aa7a81f
 Removing intermediate container 804aaa78f400
 Successfully built 861d2aa7a81f
-The push refers to a repository [gcr.io/bizplatform-ix-production/mongodb]
+The push refers to a repository [gcr.io/[PROJECT_NAME]/mongodb]
 203cdcfd72e8: Pushed
 62543ec60e00: Pushed
 7671a01a405f: Pushed
@@ -388,7 +388,7 @@ Step 3/3 : CMD redis-server /usr/local/etc/redis/redis.conf
  ---> d71962b24859
 Removing intermediate container 10a82080e895
 Successfully built d71962b24859
-The push refers to a repository [gcr.io/bizplatform-ix-production/redis]
+The push refers to a repository [gcr.io/[PROJECT_NAME]/redis]
 e286afaaa8b6: Pushed
 e563ba9af84a: Pushed
 31d459b0aa2e: Pushed
@@ -497,7 +497,7 @@ Step 7/7 : COPY globalsearch_template.json /usr/share/elasticsearch/config/globa
  ---> e21307f25d74
 Removing intermediate container 2b98583aa00b
 Successfully built e21307f25d74
-The push refers to a repository [gcr.io/bizplatform-ix-production/elasticsearch5-ja]
+The push refers to a repository [gcr.io/[PROJECT_NAME]/elasticsearch5-ja]
 62d54c33034e: Pushed
 36bf059d8770: Pushed
 3f858c6d1d74: Pushed
@@ -658,12 +658,12 @@ $ cd $GOPATH/configctl
 stagingの場合
 ```bash
 $ git pull origin develop
-$ ./do.sh build_push bizplatform-ix-production
+$ ./do.sh build_push [PROJECT_NAME]
 ```
 productionの場合
 ```bash
 $ git pull origin master
-./do.sh build_push bizplatform-ix-production
+./do.sh build_push [PROJECT_NAME]
 ```
 #### コンテナのデプロイ
 
@@ -692,7 +692,7 @@ $ kubectl create -f apps/[microservice-name]/depleyments/prod-deployments.yml
 2. ノード内のインスタンスグループのリンクをクリック
    - インスタンス名の横にある「外部IP」がグローバルIPとなる
 3. 該当VMインスタンスページへ
-4. 編集→　インスタンス名(例えば、gke-ix-stg-pool-lb-3d554f6e-r20gのような名前)をコピーして、タグへ貼り付け、保存
+4. 編集→　インスタンス名(例えば、gke-cluster-name-pool-lb-3d554f6e-r20gのような名前)をコピーして、タグへ貼り付け、保存
 5. GCPメニュー→ネットワーキングを選択
 6. ネットワーク→defaultをクリック
 7. 「ファイアウォールルールを追加」
@@ -711,8 +711,8 @@ $ cd path/to/deployments_root/ingress
 
 Certファイルをエンコード
 ```bash
-$ base64 -i bizplatform-ix.com/bizplatform-ix.com.crt
-$ base64 -i bizplatform-ix.com/bizplatform-ix.com.key
+$ base64 -i pjname.com/pjname.com.crt
+$ base64 -i pjname.com/pjname.com.key
 ```
 
 XXXX部分に、それぞれエンコードされた情報を貼り付けて、保存（→ deployments/cert/cert_bpix.yml）
@@ -720,7 +720,7 @@ XXXX部分に、それぞれエンコードされた情報を貼り付けて、�
 apiVersion: v1
 kind: Secret
 metadata:
-  name: bpix-secret
+  name: pjname-secret
 type: Opaque
 data:
   tls.crt: XXXX
@@ -732,7 +732,7 @@ Cert情報をデプロイ
 $ kubectl create -f deployments/cert/cert_bpix.yml
 ```
 ```
-secret "bpix-secret" created
+secret "pjname-secret" created
 ```
 
 ConfigMapをデプロイ
@@ -762,7 +762,7 @@ Ingressのデプロイ
 $ kubectl create -f deployments/stg/ingress-stg.yml
 ```
 ```
-ingress "bpix-stg" created
+ingress "pjname-stg" created
 ```
 
 Nginx-Ingressのデプロイ
