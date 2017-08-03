@@ -15,10 +15,10 @@ spec:
         env:
           - name: ENV
             value: production
-#          - name: UNREAD_COMMENT_TASK_INTERVAL
-#            value: "60"
-#          - name: UNREAD_MESSAGE_TEMP
-#            value: "03f02ac0-bacc-4047-b3df-f218cdd206bb"
+          - name: UNREAD_COMMENT_TASK_INTERVAL
+            value: "60"
+          - name: UNREAD_MESSAGE_TEMP
+            value: "f6244a56-c0dc-4b41-a0dc-a10323656551"
         # resources:
         #   requests:
         #     cpu: "0.1m"
